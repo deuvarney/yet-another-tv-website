@@ -1,0 +1,1 @@
+export const movieDbApiKey = '00000000000000000000000000000000';
