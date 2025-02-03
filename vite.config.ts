@@ -4,6 +4,7 @@ import reactPlugin from '@vitejs/plugin-react-swc'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "/yet-another-tv-website/", // GITHUB Deployment setting
   plugins: [
     reactPlugin(), 
   ],
