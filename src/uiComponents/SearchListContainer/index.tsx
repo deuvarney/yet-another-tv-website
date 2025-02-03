@@ -1,9 +1,9 @@
 import useTheMovieDB from "@/hooks/useTheMovieDB";
 import { useEffect } from "react";
-import { SearchedBarItem } from "../SearchMovieContainer";
+import { SearchedBarItem } from "../SearchContainer";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { selectSearchedTVShowsListPageLoadedCount, selectSearchedTVShowsListPageResults } from "../SearchMovieContainer/selectors";
-import { queryMoreSearchListResults } from "../SearchMovieContainer/actionCreators";
+import { selectSearchedTVShowsListPageLoadedCount, selectSearchedTVShowsListPageResults } from "../SearchContainer/selectors";
+import { queryMoreSearchListResults } from "../SearchContainer/actionCreators";
 import useScrollPosition from '@/hooks/useScrollPosition';
 
 

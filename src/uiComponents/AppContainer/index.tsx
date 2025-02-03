@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Route, Routes, Link, useLocation, useParams, useSearchParams } from 'react-router-dom';
 
 import PopularTvShowsContainer from '../PopularTvShowsContainer';
-import TVSeasonsContainer from '../TVSeasonsContainer';
-import TVSeasonContainer from '../TVSeasonContainer';
-import SearchMovieContainer from '../SearchMovieContainer';
+import TVSeasonsContainer from '../TVShowContainer';
+import TVSeasonContainer from '../TVEpisodeContainer';
+import SearchMovieContainer from '../SearchContainer';
 import './styles.scss';
 import TVSeasonOverviewContainer from '../TVSeasonOverviewContainer';
 import Settings from '../Settings';
