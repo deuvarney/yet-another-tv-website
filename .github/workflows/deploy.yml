@@ -30,6 +30,9 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install
+      - name: Install dependencies for moviedb-promise-main
+        working-directory: src/modules/moviedb-promise-main
+        run: yarn install
       - name: Build
         run: yarn build
       - name: Setup Pages
