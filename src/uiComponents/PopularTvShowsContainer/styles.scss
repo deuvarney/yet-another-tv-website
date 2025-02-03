@@ -13,7 +13,7 @@
   .popular-tv-shows {
     text-align: center;
     display: grid;
-    // grid-template-columns: repeat( auto-fit, minmax(240px, 1fr) ); // 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat( auto-fit, minmax(240px, 1fr) ); // 1fr 1fr 1fr 1fr 1fr;
 
     gap: 5rem;
     padding-top: 4rem;
