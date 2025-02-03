@@ -1,0 +1,117 @@
+@use '../AppContainer/Animations';
+
+$title-left-margin: 36px;
+$left-bar-width: 20%;
+$text-background-color: rgb(0 0 0 / 6%);
+
+.TVSeasonLinksContainer {
+  display: flex;
+     width: 100%;
+     flex-wrap: wrap;
+     justify-content: center;
+}
+
+
+
+.TVSeasonsContentz {
+
+  &-MainCont .bouncing-element {
+    @include Animations.bounce;
+  }
+
+  &-Name, &-OverView, &-TagLine, &-Status {
+    margin-right: $title-left-margin;
+    background: rgb(0 0 0 / 6%);
+    padding: 4px 20px;
+  }
+
+  &-Name {
+    font-size: 3.6rem;
+    display: inline-block;
+  }
+
+  &-OverView {
+    margin-bottom: 2.4em;
+    display: inline-block;
+    font-size: 1.4em;
+  }
+
+  &-Status {
+    display: inline-block;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+
+    &-label {
+    }
+
+    &-value {
+      font-size: 80%;
+      color: #a9b2ba;
+      font-size: 1.2rem;
+    }
+  }
+
+  &-TagLine {
+    display: inline-block;
+    font-size: 1.4rem
+  }
+
+  &-misc {
+    &-label {
+      font-size: 1.8rem;
+      padding: 1rem 2rem; // TODO: Centralize label padding or use shared component
+    }
+
+    &-homepage-link {
+      font-size: 1.4rem;
+      padding: 1rem 2rem; // TODO: Centralize label padding or use shared component
+    }
+  }
+
+  &-networks {
+
+    &-label {
+      font-size: 1.6rem;
+      padding: 1rem 2rem; // TODO: Centralize label padding or use shared component
+    }
+
+    &-items {
+      padding: 0 4rem; // TODO: Centralize label padding or use shared component
+    }
+
+    &-item {
+      
+      text-align: center;
+      display: inline-block;
+      margin: 1rem;
+
+      &-logo {
+        width: 150px;
+        height: 60px;
+      }
+
+      &-name {
+        font-size: 1rem;
+        padding-top: .5rem
+      }
+    }
+
+  }
+}
+
+.TVSeasonLinkContainer {
+  display: inline-block;
+  width: 224px;
+  height: 232px;
+  text-align: center;
+  background-color: rgba(41, 44, 51, 0.8);
+  border-radius: 16px;
+  margin: 24px;
+  padding: 12px 0;
+  color: #efefef;
+    p {
+      margin: 0;
+      padding: 0;
+      padding-top: 12px;
+    }
+}

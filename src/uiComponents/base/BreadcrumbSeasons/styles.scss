@@ -1,0 +1,37 @@
+@use '../../AppContainer/Animations.scss';
+
+.TVSeasonContainerName-Breadcrumb {
+    font-size: 1.6rem;
+
+    &-Home a{
+          font-size: 1.4rem;
+          &:hover{color: white;}
+    } 
+    &-Season-Trigger button{
+          background: none;
+          &:hover{color: white;}
+          &[data-state="open"] {
+                color: white;
+          }
+
+          .bouncing-element {
+            @include Animations.bounce;
+          }
+
+    }   
+    &-Season-Dropdown {
+          background: rgba(0, 0, 0, 0.8);
+          color: white;
+
+          &-Item {
+                padding: 12px 24px;
+                position: relative;
+          }
+
+          &-Dot {
+                position: absolute;
+                left: 0;
+                color: #1890ff;
+          }
+    } 
+}

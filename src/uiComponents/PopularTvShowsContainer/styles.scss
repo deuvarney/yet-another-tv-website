@@ -1,0 +1,21 @@
+  .tv-series-filters {
+    text-align: center;
+
+    button {
+      margin: 1.2rem;
+      width: 10rem;
+      padding: 2rem 6rem;
+      border-radius: 6px;
+      font-size: 2rem;
+    }
+  }
+
+  .popular-tv-shows {
+    text-align: center;
+    display: grid;
+    // grid-template-columns: repeat( auto-fit, minmax(240px, 1fr) ); // 1fr 1fr 1fr 1fr 1fr;
+
+    gap: 5rem;
+    padding-top: 4rem;
+
+  }

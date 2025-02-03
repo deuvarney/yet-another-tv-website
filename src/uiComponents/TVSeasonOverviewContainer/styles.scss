@@ -1,0 +1,74 @@
+@use '../AppContainer/Animations.scss';
+
+.TVSeasonOverviewContent {
+
+      &-cont {
+            container-name: tv-season-overview-main;
+            container-type: inline-size;
+
+            .bouncing-element {
+                  @include Animations.bounce;
+                }
+      }
+
+      &-overview {
+            &-main-cont {
+                  display: grid;
+                  grid-template-columns: repeat(2, minmax(200px, 1fr));
+                  gap: 24px;
+            }
+
+            &-details-cont,
+            &-seasonImages-cont {
+                  margin: auto;
+                  min-width: 0; // Fix to have children elements autoflow to next line
+                  width: 100%;
+            }
+
+            @container (max-width: 600px) {
+                  &-main-cont {
+                        grid-auto-flow: row;
+                        grid-template-columns: repeat(1, 1fr);
+                  }
+
+                  &-seasonImages-cont {
+                        width: 50%;
+                  }
+            }
+
+            &-seasonImages {
+                  &-cont {
+                        text-align: center;
+                  }
+
+                  &-title {
+                        font-size: 2rem;
+                  }
+
+                  &-img {
+
+                        width: 100%;
+                        max-width: 300px;
+                        display: inline-block;
+
+                        &-cont {
+                              width: 100%;
+
+                        }
+                  }
+            }
+      }
+}
+
+// TODO: make this be centralized?
+.TVSeasons-NavBar-List-Item-Overview {
+      border-style: double;
+      border-bottom-width: 4px;
+      border-top-width: 4px;
+      border-color: rgba(113, 113, 122, .6);
+
+
+      &-Link {
+            font-size: 2rem;
+      }
+}

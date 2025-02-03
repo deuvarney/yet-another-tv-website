@@ -1,0 +1,45 @@
+$movie-item-width: 22rem;
+
+.movie-item {
+  height: 40rem;
+  width: $movie-item-width;
+  padding: .4rem 0;
+  border-radius: 8px;
+  display: inline-block;
+  // background-color: #0C263C;
+  background-color: #5a6065;
+  text-align: center;
+  position: relative;
+
+  &.expanded {
+    width: 32em;
+  }
+
+  &-link {
+    margin: auto;
+    width: $movie-item-width;
+  }
+
+}
+.movie-image {
+  max-height: 36rem;
+  margin: auto;
+  margin-bottom: 1.2em;
+  width: 100%;
+}
+.movie-name {
+  font-size: 1.6em;
+}
+
+.movie-release-date {
+}
+
+// .info-button {
+//   position: absolute;
+//   right: -0.3em;
+//   bottom: .2em;
+//   font-size: 1.4em;
+//   color: white;
+//   background: none;
+//   border: none;
+// }

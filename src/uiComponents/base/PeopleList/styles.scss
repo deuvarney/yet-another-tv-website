@@ -1,0 +1,20 @@
+.PeopleList-createdBy {
+    $padding: 1rem 2rem;
+
+    &-label {
+        // font-size: 2em;
+        font-size: 1.8rem;
+        padding: $padding;
+    }
+    
+    &-item {
+        display: inline-block;
+        padding: $padding;
+    }
+    
+    &-image {
+        width: 100px;
+        height: 150px;
+        border-radius: 12%;
+    }
+}

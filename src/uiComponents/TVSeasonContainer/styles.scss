@@ -1,0 +1,40 @@
+@use '../AppContainer/Measurements.scss';
+@use '../AppContainer/Animations.scss';
+
+
+.TVSeasonContainerName {
+      &-Cont .bouncing-element {
+            @include Animations.bounce;
+      }
+
+      &-Name {
+            display: inline-block;
+            margin-bottom: 1rem;
+            margin-right: 24px;
+
+            @media screen and (max-width: Measurements.$sidebar-mobile-breakpoint) {
+                  margin: 0;
+            }
+      }
+
+      &-AirDate{
+            padding-left: 4px;
+            font-size: 1.4rem;
+      }
+
+      &-Overview{
+            font-size: 1.6rem;
+            margin-top: 1.5rem;
+      }
+}
+
+// TODO: Make this be centralized?
+.TVSeasonsNavBarList .TVSeasons-NavBar-List-Item-Overview{
+      border-style: double;
+      border-bottom-width: 4px;
+      border-top-width: 4px;
+      
+      &-Link  {
+            font-size: 2rem;
+      }
+}

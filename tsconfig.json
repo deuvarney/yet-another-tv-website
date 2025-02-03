@@ -1,0 +1,21 @@
+{
+"compilerOptions": {
+    // "baseUrl": ".",
+    // "paths": {
+    //   "@/*": ["./src/*"]
+    // },
+    // "nounsu"
+    "skipLibCheck": true,
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+      "src/modules/moviedb-promise-main"
+  ],
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}

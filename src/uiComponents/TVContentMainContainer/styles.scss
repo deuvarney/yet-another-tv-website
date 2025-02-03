@@ -1,0 +1,11 @@
+@use '../AppContainer/Measurements.scss';
+
+
+.TVContentMainContainer {
+    width: 75%;
+    display: inline-block;
+
+    @media screen and (max-width: Measurements.$sidebar-mobile-breakpoint) {
+        width: 100%;
+    }
+}

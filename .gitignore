@@ -1,0 +1,46 @@
+# Vite output
+/dist
+/build
+
+# Node modules
+/node_modules
+
+# TypeScript and JavaScript build artifacts
+/.cache
+/.temp
+/.tsbuildinfo
+/.jsbuildinfo
+*.d.ts
+
+# Private files
+*apiKeys*
+
+# IDE and editor files
+/.vscode
+/.idea
+/.DS_Store
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Vite config files
+/vite.config.js.local
+/vite.config.ts.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Yarn and npm files
+.yarn
+.yarnrc
+.yarnrc.yml
+.yarnignore
+package-lock.json
+
+# Other
+.env
+.env.local
+.env.*.local

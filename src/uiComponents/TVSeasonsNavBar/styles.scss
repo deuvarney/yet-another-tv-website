@@ -1,0 +1,78 @@
+$left-bar-width: 20%;
+
+.TVSeasonsNavBar {
+    width: 25%;
+    display: inline-block;
+    vertical-align: top;
+    background-color: rgba(41, 44, 51, 0.9);
+    flex: none;
+
+    &.fullWidth {
+      width: 100%;
+      min-width: min(50vw, 400px);
+      padding: 0 0.8rem;
+      max-height: 40dvh;
+      overflow-y: scroll;
+    }
+
+    &-title {
+      // TODO: Copied in Season stylesheet
+      font-size: 1.6rem;
+      padding-top: 0.8rem;
+      padding-bottom: 0.8rem;
+      padding-left: 1rem;
+
+      &-header {
+        font-size: 2rem;
+      }
+
+      &-value {
+        padding-left: 1rem;
+        font-size: 2rem;
+      }
+    }
+  
+  }
+  
+  .TVSeasonsNavBarList {
+    list-style: none;
+    padding: 0;
+    height: 100%;
+    text-decoration: none;
+    font-size: 1.4em;
+    color: white;
+  
+    .season-name {
+      padding: .4rem 0;
+      flex-grow: 1; // Allow link to use up avialble space to the right
+    }
+  
+    &:after {
+      content: '';
+      flex: auto;
+    }
+
+
+    &-item {
+      padding: .6rem 0;
+      padding-left: 24px; // Space holder for the active dot
+      border-color: rgba(113, 113, 122, .6);
+      border-bottom: 1px solid rgba(113, 113, 122, .6);
+
+
+      &:nth-child(2) {
+        border-top: 1px solid rgba(113, 113, 122, .6);
+      }
+      &-active {
+        padding-left: 0;
+
+        &-icon {
+          color: #1890ff;
+        }
+      }
+
+      &-link {
+        width: 100%;
+      }
+    }
+  }

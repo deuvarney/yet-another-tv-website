@@ -1,0 +1,34 @@
+.image-loader {
+    position: relative;
+    max-height: 10em;
+    overflow: hidden;
+  
+    .default-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      object-fit: cover;
+      transition: opacity 0.3s ease-in-out;
+    }
+  
+    .loaded-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+  
+      &.loaded {
+        opacity: 1;
+      }
+    }
+  }
+  
+  .image-loader:not(.loading) .default-image {
+    opacity: 0;
+  }
+  
+  .image-loader.loading .loaded-image {
+    opacity: 0;
+  }
