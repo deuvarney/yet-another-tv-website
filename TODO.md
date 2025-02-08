@@ -9,7 +9,8 @@
 - Animate Placeholder Season Poster
 
 - Screen width jumping 
-- API Key input/notifications
+- Settings, API Key input - Done
+- Settings, API Key notifications
 
 - Search List
 - Search No Results
@@ -52,3 +53,6 @@
 - Item-in animation
 - Debounce useScreenWidth hook (only update once screenwidth is past max)
 - Implement React Scan?
+
+
+- Router, dynamic base path - Done
