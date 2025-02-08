@@ -11,6 +11,8 @@
 /.tsbuildinfo
 /.jsbuildinfo
 *.d.ts
+# Keep the vite-env.d.ts as it is used for styles file import config
+!src/vite-env.d.ts
 
 # Private files
 *apiKeys*
