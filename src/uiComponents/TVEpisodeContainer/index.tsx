@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Link } from 'react-router-dom';
 
@@ -123,12 +123,12 @@ function TVSeasonContainer(props: TVSeasonContainerPropsType) {
     const isVideoFeatureEnabled = useAppSelector(selectIsYoutubeEnabled);
 
 
-    const epiClick = (episodeNumber: number) => (/*event: React.MouseEvent*/) => {
+    const epiClick = useCallback((episodeNumber: number) => {
         const existingEpisode = episodes.find((episode: Episode) => episode.episode_number === episodeNumber);
         if (existingEpisode) {
             setSelectedEpisode(existingEpisode);
         }
-    };
+    }, [episodes]);
 
 
     useEffect(
