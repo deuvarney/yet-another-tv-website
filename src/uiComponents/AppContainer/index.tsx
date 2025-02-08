@@ -17,6 +17,7 @@ import TermsOfServiceContainer from '../TermsOfServiceContainer';
 import YATWLogo from '@/assets/yatwLogo';
 import { loadApplicationSettings } from './actionCreators';
 import { selectAPIKey } from './selectors';
+import basePath from '@/config/basePath';
 
 const WrappedTVSeasonsContainer = (/* props*/) => {
     const { showId = '0' } = useParams();
@@ -125,7 +126,7 @@ function App() {
     }, []);
 
     return (
-        <Router>
+        <Router basename={basePath()}>
             <AppContainerContent apiKey={apiKey} />
         </Router>
     );
