@@ -22,10 +22,11 @@ import VideosDialogListContent from '../SharedComponents';
 import useTheMovieDB from '@/hooks/useTheMovieDB';
 import { useAppSelector } from '@/hooks/redux';
 import { selectIsYoutubeEnabled } from '../AppContainer/selectors';
+import usePrevious from '@/hooks/usePrevious';
 
 
 
-interface TVSeasonsNavBarEpisodeItemsProps {
+type TVSeasonsNavBarEpisodeItemsProps = {
     activeItemId: number | string;
     currentDate: number;
     epiClickFn: (episodeNumber: number) => void;
@@ -121,6 +122,11 @@ function TVSeasonContainer(props: TVSeasonContainerPropsType) {
     const [movieDbApi] = useTheMovieDB();
 
     const isVideoFeatureEnabled = useAppSelector(selectIsYoutubeEnabled);
+    const prevIsVideoFeatureEnabled = usePrevious(isVideoFeatureEnabled);
+
+    if (!!prevIsVideoFeatureEnabled && !isVideoFeatureEnabled) {
+        setEpisodeVideos([]);
+    }
 
 
     const epiClick = useCallback((episodeNumber: number) => {
@@ -166,8 +172,6 @@ function TVSeasonContainer(props: TVSeasonContainerPropsType) {
             movieDbApi?.episodeVideos({ id: showId, season_number: seasonNumber, episode_number: currEpisodeNum }).then((videos: EpisodeVideosResponse) => {
                 setEpisodeVideos(videos.results as Video[]);
             });
-        } else if (episodeVideos.length > 0) {
-            setEpisodeVideos([]);
         }
     },
         [movieDbApi, showId, seasonNumber, episodeNumberPropValue, isVideoFeatureEnabled],

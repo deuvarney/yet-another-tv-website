@@ -9,8 +9,11 @@
     align-items: flex-start;
     container-name: video-dialog-list;
     container-type: inline-size;
+    max-height: 60rem;
+    overflow-y: auto;
 }
 
+// TODO: Check if this value is even used
 .VideoDialogList-content {
     max-width: 90vw;
     background-color: rgba(0, 0, 0, 0.6);
@@ -28,7 +31,6 @@
 .VideoDialogList-item {
     &-trigger {
         margin-bottom: 24px;
-        margin-right: 16px;
         padding-left: 4px;
         padding-right: 4px;
         width: 30%;
@@ -47,8 +49,13 @@
     }
 
     &-trigger:first-child {
-        width: 60%;
+        width: 65%;
         max-width: 90rem;
+    }
+
+    &-trigger:only-child {
+        width: 100%;
+        // max-width: 84rem;
     }
 
     @container video-dialog-list (max-width: 80rem) {

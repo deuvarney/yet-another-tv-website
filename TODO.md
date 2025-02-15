@@ -5,14 +5,14 @@
 - Animate loading switchover 
 - Background image switching - Done
 - Animate Background image switching - Partial
-- Placeholder Season Poster
+- Placeholder Season Poster - Image Loader
 - Animate Placeholder Season Poster
 
 - Screen width jumping 
 - Settings, API Key input - Done
 - Settings, API Key notifications
 
-- Search List
+- Search List - Partial
 - Search No Results
 - Search Bar No Results
 - Search Filters
@@ -27,6 +27,10 @@
 - Unnecessary Network Requests management
 
 
+- Seasons, First Video sizing in group
+- Seasons, First Video sizing when only 1
+- Seasons, Videos Container max height
+
 - Search Bar, fix animation with 2 input bars - Done
 - Search bar, add close button for when the search bar is open - DOne
 - Search Bar, fix focus states/behavior - In progress (focus on bar should redisplay results)
@@ -36,7 +40,7 @@
 - Home - Add Load more button
 - Home - Image Loader
 
-- Search - Add loading indicator
+- Search - Add loading indicator (toast?)
 - Search - Add Load more button
 - Search - Image Loader
 
@@ -56,3 +60,5 @@
 
 
 - Router, dynamic base path - Done
+
+- Deployment, dynamically use repository name from GITHUB variables instead of hardcoding
