@@ -124,7 +124,7 @@ function TVSeasonContainer(props: TVSeasonContainerPropsType) {
     const isVideoFeatureEnabled = useAppSelector(selectIsYoutubeEnabled);
     const prevIsVideoFeatureEnabled = usePrevious(isVideoFeatureEnabled);
 
-    if (!!prevIsVideoFeatureEnabled && !isVideoFeatureEnabled) {
+    if (!!prevIsVideoFeatureEnabled && !isVideoFeatureEnabled && !!episodeVideos.length) {
         setEpisodeVideos([]);
     }
 

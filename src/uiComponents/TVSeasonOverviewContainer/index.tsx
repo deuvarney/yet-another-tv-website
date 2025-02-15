@@ -143,7 +143,7 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
 
     const [movieDbApi] = useTheMovieDB();
 
-    if(!!prevIsVideoFeatureEnabled && !isVideoFeatureEnabled) {
+    if(!!prevIsVideoFeatureEnabled && !isVideoFeatureEnabled && !!seasonVideos.length) {
         setSeasonVideos([]);
     }
 
