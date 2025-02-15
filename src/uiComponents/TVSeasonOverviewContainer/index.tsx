@@ -23,6 +23,7 @@ import VideosDialogListContent from '../SharedComponents';
 import useTheMovieDB from '@/hooks/useTheMovieDB';
 import { useAppSelector } from '@/hooks/redux';
 import { selectIsYoutubeEnabled } from '../AppContainer/selectors';
+import usePrevious from '@/hooks/usePrevious';
 
 
 interface TVSeasonsNavBarEpisodeItemsProps {
@@ -133,6 +134,8 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
     const [seasonVideos, setSeasonVideos] = useState<Video[]>([]);
     const isMobileView = useScreenWidth(600);
     const isVideoFeatureEnabled = useAppSelector(selectIsYoutubeEnabled);
+    const prevIsVideoFeatureEnabled = usePrevious(isVideoFeatureEnabled);
+    
 
     
     const [season, setSeason] = useState<Season>({});
@@ -140,14 +143,18 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
 
     const [movieDbApi] = useTheMovieDB();
 
-    const epiClick = (index: number) => (/*event: React.MouseEvent*/) => {
+    if(!!prevIsVideoFeatureEnabled && !isVideoFeatureEnabled) {
+        setSeasonVideos([]);
+    }
+
+    const epiClick = (index: number) => {
         const episodeNumber = selectedEpisode?.episode_number || 0;
         if ((episodeNumber || 0) - 1 !== index && episodes[index]) {
             setSelectedEpisode(episodes[index]);
         }
     };
 
-
+    //  TODO: Move this to its own custom hook
     React.useEffect(() => {
         let intervalId: NodeJS.Timeout | undefined;
         if (api) {
@@ -186,11 +193,9 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
                 movieDbApi?.seasonVideos({ id: showId, season_number: seasonNumber }).then((resp: VideosResponse) => {
                     if(resp.results){setSeasonVideos(resp.results);};
                 });    
-            } else if(seasonVideos.length > 0) {
-                setSeasonVideos([]);
             }
         },
-        [movieDbApi, showId, seasonNumber, isVideoFeatureEnabled], // Run Only Once
+        [movieDbApi, showId, seasonNumber, isVideoFeatureEnabled], // Run Only Once?
     );
 
     const episodesList = getTVSeasonsNavBarEpisodeItems({
@@ -219,8 +224,6 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
             }
 
             <TVContentMainContainer>
-                
-
                 <ContentContainer className="TVSeasonOverviewContent-cont">
                     <BreadCrumbSeasons showId={showId} seasonNumber={seasonNumber} seasonName={seasonName} tvShow={tvShow} />
                     {
