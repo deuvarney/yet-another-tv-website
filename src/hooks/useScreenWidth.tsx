@@ -1,24 +1,31 @@
 import { useState, useEffect } from 'react';
 import debounce from 'lodash/debounce';
 
+/**
+ * Custom hook that determines if the current screen width is less than the specified mobile width.
+ * It updates the result when the window is resized, with a debounce of 500ms.
+ *
+ * @param {number} mobileWidth - The breakpoint width to determine mobile size.
+ * @returns {boolean} - Returns true if the current screen width is less than the specified mobile width, otherwise false.
+ */
+
 export const useScreenWidth = (mobileWidth: number) => {
-  const [width, setWidth] = useState(window.innerWidth);
-  const [isMobileSize, setMobileSize] = useState(width < mobileWidth);
+  const [isMobileSize, setMobileSize] = useState(window.innerWidth < mobileWidth);
 
   useEffect(() => {
+    const abortController = new AbortController();
+
     const handleResize = debounce(() => {
-      const newWidth = window.innerWidth;
-      setWidth(newWidth);
-      const newIsMobileSize = newWidth < mobileWidth;
+      const newIsMobileSize = window.innerWidth < mobileWidth;
       if (newIsMobileSize !== isMobileSize) {
         setMobileSize(newIsMobileSize);
       }
     }, 500); // debounce for 500ms
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, {signal: abortController.signal});
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      abortController.abort();
     };
   }, [mobileWidth, isMobileSize]);
 

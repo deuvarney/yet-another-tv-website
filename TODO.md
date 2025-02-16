@@ -50,6 +50,9 @@
 - Settings, tie to redux state - Done
 - Settings, read/save to localStorage - Done
 
+- Hooks, useScreenWidth.tsx, remove unnecessary state - Done
+- Hooks, useScrollPosition.tsx, remove unnecessary state - Done
+
 - AppContainer, setup selector, reducer, actionCreator - Done
 
 - Image compression

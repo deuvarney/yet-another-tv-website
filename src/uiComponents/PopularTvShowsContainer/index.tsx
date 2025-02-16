@@ -4,7 +4,7 @@ import { useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
-import useScrollPosition from '@/hooks/useScrollPosition';
+import { useScrollPositionExec } from '@/hooks/useScrollPosition';
 import MovieItem from '../MovieItem';
 
 // import action Creators
@@ -57,7 +57,6 @@ function PopularTvShowsContainer(/*props*/) {
     const popularTvShows = useAppSelector(selectFilteredShows);
     const showType = useAppSelector(selectCurrentShowType);
     const showHomeFilters = useAppSelector(selectIsHomeFiltersEnabled);
-    const scrollPosition = useScrollPosition();
     const [theMovieDB] = useTheMovieDB();
     const dispatch = useAppDispatch();
 
@@ -68,11 +67,11 @@ function PopularTvShowsContainer(/*props*/) {
         }
     }, [theMovieDB]); // Only Run once
 
-    useEffect(() => {
-        if (theMovieDB && (scrollPosition + window.screen.availHeight) / document.body.scrollHeight >= .75) {
+    useScrollPositionExec(.75, () => {
+        if(theMovieDB){
             dispatch(getShowTypeShows(theMovieDB));
         }
-    }, [scrollPosition, theMovieDB]);
+    });
 
     const onTrendingClicked = useCallback((/* evt*/) => {
         if(!theMovieDB) {return;}
