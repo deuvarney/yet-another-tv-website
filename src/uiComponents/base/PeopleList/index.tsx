@@ -57,8 +57,8 @@ export function PeopleCarousel(props: PeopleListProps) {
 
                     }
                 </CarouselContent>
-                <CarouselPrevious className='left-0' />
-                <CarouselNext className='right-0' />
+                <CarouselPrevious className='text-accent-foreground left-0 h-full animate-in fade-in-0 transition opacity-100 transform translate-x-0 disabled:opacity-0 disabled:-translate-x-4 duration-500' />
+                <CarouselNext className='text-accent-foreground right-0 h-full animate-in fade-in-0 transition opacity-100 transform translate-x-0 disabled:opacity-0 disabled:translate-x-4 duration-500' />
             </Carousel>
 
         </div>
