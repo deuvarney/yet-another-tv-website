@@ -8,18 +8,24 @@ import IconWithText from "../base/IconWIthText";
 
 import './styles.scss';
 import PlaceholderImageSVG from "../base/PlaceHolderImageSVG";
+import ImageLoader from "../base/ImageLoader";
 
+interface RecentEpisodeImageProps {
+    still_path: Episode["still_path"];
+    name: Episode["name"];
+}
 
-function getProfileImageJSX(episode: Episode) {
-    return episode.still_path ?
-        <img 
+function RecentEpisodeImage(props: RecentEpisodeImageProps) {
+    return props.still_path ?
+        <ImageLoader
+            src={`https://image.tmdb.org/t/p/w300${props.still_path}`}
+            alt={`Episode Image for ${props.name}`}
             className='RecentEpisodeTabContent-image'
-            src={`https://image.tmdb.org/t/p/w300${episode.still_path}`}
-            alt={episode.name}
+            placeholderComp={<PlaceholderImageSVG className='animate-pulse RecentEpisodeTabContent-image' />}
+            aspectRatio="41/23"
         />
         : <PlaceholderImageSVG className='RecentEpisodeTabContent-image'/>;
 }
-
 
 
 interface RecentEpisodeTabContentProps {
@@ -42,7 +48,7 @@ function RecentEpisodeTabContent(props: RecentEpisodeTabContentProps) {
                     <p className='RecentEpisodeTabContent-date'>{episode.air_date}</p>
                 </IconWithText>
                 <div className='RecentEpisodeTabContent-mainCont'>
-                    {getProfileImageJSX(episode)}
+                    <RecentEpisodeImage still_path={episode.still_path} name={episode.name} />
                     <p className='RecentEpisodeTabContent-overview'>{episode.overview}</p>
                 </div>
             </Link>

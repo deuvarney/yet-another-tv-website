@@ -24,6 +24,8 @@ import useTheMovieDB from '@/hooks/useTheMovieDB';
 import { useAppSelector } from '@/hooks/redux';
 import { selectIsYoutubeEnabled } from '../AppContainer/selectors';
 import usePrevious from '@/hooks/usePrevious';
+import ImageLoader from '../base/ImageLoader';
+import { PlaceholderPosterImageSVG } from '../base/PlaceHolderImageSVG';
 
 
 interface TVSeasonsNavBarEpisodeItemsProps {
@@ -33,10 +35,10 @@ interface TVSeasonsNavBarEpisodeItemsProps {
     episodes: Episode[];
     seasonNumber: number;
     showId: string;
-  }
+}
 
 function getTVSeasonsNavBarEpisodeItems(props: TVSeasonsNavBarEpisodeItemsProps): React.ReactNode[] {
-    const {activeItemId, currentDate, epiClickFn, episodes, seasonNumber, showId} = props;
+    const { activeItemId, currentDate, epiClickFn, episodes, seasonNumber, showId } = props;
     const overviewItem = (
         <TvSeasonsNavBarListItem
             key={'overview'}
@@ -51,7 +53,7 @@ function getTVSeasonsNavBarEpisodeItems(props: TVSeasonsNavBarEpisodeItemsProps)
 
 
     const episodesList = episodes.map((episode) => (
-        <TvSeasonsNavBarListItem 
+        <TvSeasonsNavBarListItem
             key={episode.id}
             isActive={episode.id === activeItemId}>
             <Link
@@ -74,11 +76,11 @@ function getStatusText(season: Season, currentDate: number, lastEpisode?: Episod
     // If there is not a season air_date, then the status text should be 'Announced'
     // If there there is a season air_date that is before the current data, the status text should be 'Scheduled'
     // If the air_date of the last episode is after the current date, the status text should be 'In Progress'
-    if(!season?.air_date) {
+    if (!season?.air_date) {
         statusText = 'Announced';
-    } else if (lastEpisode?.air_date){
+    } else if (lastEpisode?.air_date) {
         statusText = new Date(lastEpisode.air_date).getTime() > currentDate ? 'In Progress' : 'Aired';
-    }  else if(new Date(season.air_date).getTime() < currentDate){
+    } else if (new Date(season.air_date).getTime() < currentDate) {
         statusText = 'Scheduled';
     }
     return statusText;
@@ -135,15 +137,15 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
     const isMobileView = useScreenWidth(600);
     const isVideoFeatureEnabled = useAppSelector(selectIsYoutubeEnabled);
     const prevIsVideoFeatureEnabled = usePrevious(isVideoFeatureEnabled);
-    
 
-    
+
+
     const [season, setSeason] = useState<Season>({});
     const [api, setApi] = React.useState<CarouselApi>();
 
     const [movieDbApi] = useTheMovieDB();
 
-    if(!!prevIsVideoFeatureEnabled && !isVideoFeatureEnabled && !!seasonVideos.length) {
+    if (!!prevIsVideoFeatureEnabled && !isVideoFeatureEnabled && !!seasonVideos.length) {
         setSeasonVideos([]);
     }
 
@@ -164,7 +166,7 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
         }
 
         return () => {
-            if(intervalId) {
+            if (intervalId) {
                 clearInterval(intervalId);
             }
         }
@@ -186,13 +188,13 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
             })
 
             movieDbApi?.seasonImages({ id: showId, season_number: seasonNumber }).then((resp: TvSeasonImagesResponse) => {
-                if(resp.posters) {setSeasonImages(resp.posters);}
+                if (resp.posters) { setSeasonImages(resp.posters); }
             });
 
-            if(isVideoFeatureEnabled){
+            if (isVideoFeatureEnabled) {
                 movieDbApi?.seasonVideos({ id: showId, season_number: seasonNumber }).then((resp: VideosResponse) => {
-                    if(resp.results){setSeasonVideos(resp.results);};
-                });    
+                    if (resp.results) { setSeasonVideos(resp.results); };
+                });
             }
         },
         [movieDbApi, showId, seasonNumber, isVideoFeatureEnabled], // Run Only Once?
@@ -229,10 +231,10 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
                     {
                         isMobileView ? (
                             <DropdownMenu>
-                                <DropdownMenuTrigger style={{background: 'none'}}>
+                                <DropdownMenuTrigger style={{ background: 'none' }}>
                                     <IconWithText>
                                         <ContextContainerText_H1>Overview</ContextContainerText_H1>
-                                        <ChevronDownIcon className='bouncing-element' size={24} style={{paddingLeft: '.8rem'}} />
+                                        <ChevronDownIcon className='bouncing-element' size={24} style={{ paddingLeft: '.8rem' }} />
                                     </IconWithText>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align='start' style={{ zIndex: 1 }}>
@@ -260,15 +262,15 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
                             <ContentContainerLabel>
                                 Status: <ContentContainerLabelValue>[{statusText}]</ContentContainerLabelValue>
                             </ContentContainerLabel>
-                            
+
                             <ContentContainerLabel>
                                 Air Date: <ContentContainerLabelValue>{season?.air_date}</ContentContainerLabelValue>
                             </ContentContainerLabel>
-                            
+
                             <ContentContainerLabel>
                                 Episode Count: <ContentContainerLabelValue>{season?.episodes?.length || 0}</ContentContainerLabelValue>
                             </ContentContainerLabel>
-                            
+
                             <ContentContainerLabel>
                                 Rating: <ContentContainerLabelValue>[{season?.vote_average || 0}]</ContentContainerLabelValue>
                             </ContentContainerLabel>
@@ -287,11 +289,17 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
                                             .map((image, idx, arr) => {
                                                 return (
                                                     <CarouselItem className='TVSeasonOverviewContent-overview-seasonImages-img-cont'>
-                                                        <img
-                                                            src={`https://image.tmdb.org/t/p/w300${image.file_path}`}
-                                                            alt={'Season Image'}
-                                                            className='TVSeasonOverviewContent-overview-seasonImages-img'
-                                                        />
+                                                        {image.file_path ?
+                                                            <ImageLoader
+                                                                src={`https://image.tmdb.org/t/p/w300${image.file_path}`}
+                                                                alt={`Poster image of ${tvShow.name}`}
+                                                                aspectRatio='2/3'
+                                                                className='TVSeasonOverviewContent-overview-seasonImages-img'
+                                                                placeholderComp={<PlaceholderPosterImageSVG className='animate-pulse TVSeasonOverviewContent-overview-seasonImages-img' />}
+                                                                fallbackComp={<PlaceholderPosterImageSVG className='TVSeasonOverviewContent-overview-seasonImages-img' />}
+                                                            />
+                                                            : <PlaceholderPosterImageSVG className='TVSeasonOverviewContent-overview-seasonImages-img' />
+                                                        }
                                                         <p>Count: {idx + 1} of {arr.length}</p>
                                                     </CarouselItem>
                                                 );

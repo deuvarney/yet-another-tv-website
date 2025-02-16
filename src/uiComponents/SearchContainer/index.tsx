@@ -16,12 +16,33 @@ import { copySearchResultsToSearchListPageResults, updateSearchQuery } from './a
 import { Dialog, DialogContentInline, DialogOverlay, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ArrowBigLeftDash } from 'lucide-react';
+import ImageLoader from '../base/ImageLoader';
+
+interface SearchImagePosterProps {
+    poster_path: TvResult["poster_path"];
+    name: TvResult["name"];
+}
+
+function SearchImagePoster(props: SearchImagePosterProps) {
+    return props.poster_path ? (
+        <ImageLoader
+            src={`https://image.tmdb.org/t/p/w300${props.poster_path}`}
+            alt={`Poster image of ${props.name}`}
+            aspectRatio='2/3'
+            placeholderComp={<PlaceholderPosterImageSVG className='animate-pulse' />}
+            fallbackComp={<PlaceholderPosterImageSVG />}
+        />
+    ) : (
+        <PlaceholderPosterImageSVG />
+    )
+}
 
 interface SearchedBarItemProps {
     maxGenreIds?: number;
     tvShow: TvResult;
     onShowClicked: () => void;
 }
+
 
 // TODO: Temporarily export this item
 export function SearchedBarItem(props: SearchedBarItemProps) {
@@ -31,10 +52,7 @@ export function SearchedBarItem(props: SearchedBarItemProps) {
             <div className="searched-tv-show-list-item-content" style={{ display: 'flex' }}>
                 {/* <img className="searched-tv-show-list-item-image" alt="name" src={(tvShow.poster_path && `https://image.tmdb.org/t/p/w200${tvShow.poster_path}`) || 'https://via.placeholder.com/150x250'} /> */}
                 <div className="searched-tv-show-list-item-image">
-                    {tvShow.poster_path ?
-                        <img alt="name" src={(tvShow.poster_path && `https://image.tmdb.org/t/p/w200${tvShow.poster_path}`) || 'https://via.placeholder.com/150x250'} />
-                        : <PlaceholderPosterImageSVG className='animate-pulse' />
-                    }
+                    <SearchImagePoster poster_path={tvShow.poster_path} name={tvShow.name} />
                 </div>
                 {/* <ImageLoader className="searched-tv-show-list-item-image" src={ (tvShow.poster_path && `https://image.tmdb.org/t/p/original${tvShow.poster_path}`) || 'https://via.placeholder.com/150x250'} alt="name" /> */}
                 <div className='searched-tv-show-list-item-info'>
@@ -83,7 +101,7 @@ interface InputAreaHandle {
     clearInputValue: () => void;
     focusOnInput: () => void;
     current?: HTMLInputElement | null | undefined;
-  }
+}
 
 // TODO: Forward Ref is not needed in React 19
 const InputArea = forwardRef(function InputArea(props: InputAreaProps, ref: React.ForwardedRef<InputAreaHandle>) {

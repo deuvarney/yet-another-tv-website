@@ -26,6 +26,8 @@ $movie-item-width: 22rem;
   margin: auto;
   margin-bottom: 1.2em;
   width: 100%;
+  height: 100%;
+  aspect-ratio: 2/3;
 }
 .movie-name {
   font-size: 1.6em;

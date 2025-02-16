@@ -50,6 +50,14 @@
                         width: 100%;
                         max-width: 300px;
                         display: inline-block;
+                        aspect-ratio: 2/3;
+
+                        @at-root {
+                              // Break out of nesting and to root so that the selector can properly be created
+                              svg#{&} {
+                                    height: 100%;
+                              }
+                        }
 
                         &-cont {
                               width: 100%;

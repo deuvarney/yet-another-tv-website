@@ -2,31 +2,45 @@ import { useState, useEffect } from 'react';
 import PersonSVG from '../PlaceholderPersonSVG';
 import PlaceHolderPersonLoadingSVG from '../PlaceHolderPersonLoadingSVG';
 
-// function LoadingSVG(props: React.SVGProps<SVGSVGElement>) {
-//     return (
-//         <svg width="40" height="40" viewBox="0 0 40 40" {...props}>
-//             <circle cx="20" cy="20" r="18" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="100, 100" stroke-dashoffset="0" 
-//             // animation="spin 1s linear infinite"
-//             >
-//                 <animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="1s" repeatCount="indefinite" />
-//             </circle>
-//         </svg>
-//     );
-// }
-
 interface ImageLoaderProps {
     src: string;
     alt: string;
-    placeholderSVG?: React.ReactNode;
+    fallbackComp?: React.ReactNode;
+    placeholderComp?: React.ReactNode;
     className?: string;
+    aspectRatio?: string;
     // Add other properties as needed
   }
 
+    /**
+     * A component that loads an image with a placeholder and a fallback image in case of loading failure.
+     * 
+     * @param {Object} props
+     * @param {string} props.src The URL of the image to load.
+     * @param {string} props.alt The alt text of the image.
+     * @param {ReactNode} [props.placeholderComp] A React component to render as a placeholder while the image is loading.
+     * @param {ReactNode} [props.fallbackComp] A React component to render if the image fails to load.
+     * @param {Object} [props.rest] Any additional props to pass to the img element.
+     * 
+     * @example
+     * import ImageLoader from '../ImageLoader';
+     * 
+     * const MyComponent = () => {
+     *     return (
+     *         <ImageLoader
+     *             src="https://example.com/image.jpg"
+     *             alt="An example image"
+     *         />
+     *     );
+     * };
+     */
 const ImageLoader = (props: ImageLoaderProps) => {
     const {
         src,
         alt,
-        placeholderSVG = null,
+        placeholderComp = null,
+        fallbackComp = null,
+        aspectRatio = '',
         ...rest
     } = props;
     const [imageLoaded, setImageLoaded] = useState(false);
@@ -52,20 +66,26 @@ const ImageLoader = (props: ImageLoaderProps) => {
                 }
             }, 1000);
         }
-        img.onerror = () => {setImageLoaded(false); setIsLoading(false);} // Fallback if image fails to load
+        img.onerror = () => {
+            // Fallback if image fails to load
+            setImageLoaded(false); 
+            setIsLoading(false);
+        } 
     }, [src]);
 
     // Default fallback if no SVG provided
     const DefaultPlaceholder = (
+        fallbackComp ||
         <PersonSVG {...rest}/>
     );
 
     return (
         <div 
             style={{ 
-                position: 'relative' 
+                position: 'relative',
+                ...(aspectRatio && {aspectRatio})
             }}>
-            {isLoading && <PlaceHolderPersonLoadingSVG {...rest}/>}
+            {isLoading && (placeholderComp || <PlaceHolderPersonLoadingSVG {...rest}/>)}
             {!isLoading && (imageLoaded ? (
                 <img
                     src={src}
