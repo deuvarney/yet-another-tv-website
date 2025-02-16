@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import ArrowStepper from '../base/ArrowStepper';
@@ -71,23 +71,45 @@ interface InputAreaProps {
     onSearchWrapperFocus: (evt: React.FocusEvent) => void;
     searchQuery: string;
     enabled: boolean;
-    searchInputRef: React.RefObject<HTMLInputElement>;
-    searchedTvShows: unknown[],
-    inputInfoRef: React.RefObject<{ selectionStart: number | null, selectionEnd: number | null }>
+    searchedTvShows: unknown[]; // TODO: Check this type
+    inputInfo: { selectionStart: number | null, selectionEnd: number | null };
     onSearchInputChange: (evt: React.ChangeEvent<HTMLInputElement>) => void;
     onSearchInputKeydown: (evt: React.KeyboardEvent<HTMLInputElement>) => void;
     onSearchInputSelect: (evt: React.ChangeEvent<HTMLInputElement>) => void;
     onBackBtnClick?: () => void;
 }
 
-function InputArea(props: InputAreaProps) {
+interface InputAreaHandle {
+    clearInputValue: () => void;
+    focusOnInput: () => void;
+    current?: HTMLInputElement | null | undefined;
+  }
+
+// TODO: Forward Ref is not needed in React 19
+const InputArea = forwardRef(function InputArea(props: InputAreaProps, ref: React.ForwardedRef<InputAreaHandle>) {
 
     const backButtonDisabled = !props.onBackBtnClick;
+    const searchInputRef = useRef<HTMLInputElement | null>(null);
+
+    useImperativeHandle(ref, () => ({
+        clearInputValue: () => {
+            if (searchInputRef.current) {
+                searchInputRef.current.value = '';
+            }
+        },
+        focusOnInput: () => {
+            if (searchInputRef.current?.focus) {
+                searchInputRef.current.focus();
+            }
+        }
+
+    }) as InputAreaHandle, [searchInputRef])
+
     useEffect(() => {
         // Set the selection area when first rendered
-        if (props.inputInfoRef.current) {
-            const { selectionStart = 0, selectionEnd = 0 } = props.inputInfoRef.current;
-            props.searchInputRef.current?.setSelectionRange(selectionStart || 0, selectionEnd || 0);
+        if (props.inputInfo) {
+            const { selectionStart = 0, selectionEnd = 0 } = props.inputInfo;
+            searchInputRef.current?.setSelectionRange(selectionStart || 0, selectionEnd || 0);
         }
     }, [])
 
@@ -98,21 +120,21 @@ function InputArea(props: InputAreaProps) {
             </div>
             <input
                 defaultValue={props.searchQuery}
-                disabled={!props.enabled} type="search" ref={props.searchInputRef} className={(props.searchedTvShows.length ? 'has-content focusable' : '') + " search-tv-show-input"} tabIndex={0}
+                disabled={!props.enabled} type="search" ref={searchInputRef} className={(props.searchedTvShows.length ? 'has-content focusable' : '') + " search-tv-show-input"} tabIndex={0}
                 onChange={props.onSearchInputChange} onKeyDown={props.onSearchInputKeydown} placeholder="Search for a tv show!"
                 onSelect={props.onSearchInputSelect}
             />
         </div>
     )
-}
+});
 
 interface SearchTVContainerProps {
     enabled: boolean;
 }
 
 function SearchTVContainer(props: SearchTVContainerProps) {
-    const searchInputRef = useRef<HTMLInputElement>(null);
     const searchTVContainerRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<InputAreaHandle>(null);
     const { enabled } = props;
     const searchedTvShows = useAppSelector(selectSearchedTvShows);
     const dispatch = useAppDispatch();
@@ -124,7 +146,7 @@ function SearchTVContainer(props: SearchTVContainerProps) {
     const [isDialogOpen, setDialogOpen] = useState(!!searchedTvShows.length);
 
     useEffect(() => {
-        if(!isDialogOpen && !!searchedTvShows.length) {
+        if (!isDialogOpen && !!searchedTvShows.length) {
             setDialogOpen(true);
         }
     }, [searchedTvShows]);
@@ -160,16 +182,16 @@ function SearchTVContainer(props: SearchTVContainerProps) {
         if (evt.key === 'Escape' && searchedTvShows.length) {
             setDialogOpen(false);
 
-            if (searchInputRef?.current) {
-                searchInputRef.current.value = '';
+            if (inputRef.current) {
+                inputRef.current.clearInputValue();
             }
         }
-    }, [ searchedTvShows.length]);
+    }, [searchedTvShows.length]);
 
     const onSearchWrapperFocus = useCallback((evt: React.FocusEvent) => {
         evt.stopPropagation();
         evt.preventDefault();
-        searchInputRef.current?.focus();
+        inputRef.current?.focusOnInput();
     }, []);
 
     const onSearchInputKeydown = useCallback((event: React.KeyboardEvent<HTMLInputElement>): void => {
@@ -193,7 +215,7 @@ function SearchTVContainer(props: SearchTVContainerProps) {
 
     function focusOnSearchInput(delay = true) {
         function fn() {
-            searchInputRef.current?.focus();
+            inputRef.current?.focusOnInput();
         }
         if (delay) {
             setTimeout(fn, 100);
@@ -227,16 +249,16 @@ function SearchTVContainer(props: SearchTVContainerProps) {
                     <DialogTrigger asChild>
                         {
                             !isDialogOpen &&
-                            <InputArea key={"Constant_SEARCH_INPUT_KEY"} className={backBtnAnimationStatus} 
+                            <InputArea key={"Constant_SEARCH_INPUT_KEY"} className={backBtnAnimationStatus}
                                 searchQuery={searchQuery}
-                                inputInfoRef={searchInputInfoRef}
+                                inputInfo={searchInputInfoRef.current}
                                 onSearchWrapperFocus={onSearchWrapperFocus}
                                 enabled={enabled}
-                                searchInputRef={searchInputRef}
                                 searchedTvShows={searchedTvShows}
                                 onSearchInputChange={onSearchInputChange}
                                 onSearchInputKeydown={onSearchInputKeydown}
                                 onSearchInputSelect={onSearchInputSelect}
+                                ref={inputRef}
                             />}
                     </DialogTrigger>
 
@@ -247,17 +269,17 @@ function SearchTVContainer(props: SearchTVContainerProps) {
                         onEscapeKeyDown={onEscapeKeydown}
                         onInteractOutside={onInteractOutside}>
                         <>
-                            { !!isDialogOpen &&
+                            {!!isDialogOpen &&
                                 <InputArea key={"Constant_SEARCH_INPUT_KEY"} onBackBtnClick={onBackButtonClick}
                                     searchQuery={searchQuery}
-                                    inputInfoRef={searchInputInfoRef}
+                                    inputInfo={searchInputInfoRef.current}
                                     onSearchWrapperFocus={onSearchWrapperFocus}
                                     enabled={enabled}
-                                    searchInputRef={searchInputRef}
                                     searchedTvShows={searchedTvShows}
                                     onSearchInputChange={onSearchInputChange}
                                     onSearchInputKeydown={onSearchInputKeydown}
                                     onSearchInputSelect={onSearchInputSelect}
+                                    ref={inputRef}
                                 />
                             }
 
