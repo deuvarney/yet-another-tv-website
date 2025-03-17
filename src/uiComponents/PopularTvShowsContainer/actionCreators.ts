@@ -3,7 +3,6 @@ import {SHOW_FILTER_TYPE} from '@/types/themoviedbTypes';
 import {fetchPopularShows, fetchPopularShowsSuccess, fetchTrendingShows, fetchTrendingShowsSuccess, setCurrentShow, setGenresFilter, setOriginalLanguagesFilter, setOriginCountriesFilter, setShowType} from './reducer';
 import type {DispatchThunk} from '@/hooks/redux';
 import { MovieDb } from '@/services/theMovieDbApi';
-import { TvResult } from '@/modules/moviedb-promise-main/src';
 
 export const updateSelectedShowType: DispatchThunk<{selectedShowType:SHOW_FILTER_TYPE, tmdbInstance: MovieDb}> = ({selectedShowType, tmdbInstance}) => (
     (dispatch, getState) => {
