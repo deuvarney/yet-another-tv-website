@@ -26,8 +26,10 @@ function MovieItem(props: Show) {
     return (
         <div className="movie-item" key={id}>
             <MovieImagePoster poster_path={poster_path} name={name} />
-            <p className="movie-name">{name || original_name}</p>
-            <p className="movie-release-date">{`${year || ''} (${origin_country && origin_country[0]})`}</p>
+            <div className='movie-name-cont'>
+                <p className="movie-name">{name || original_name}</p>
+                <p className="movie-release-date">{`${year || ''} (${origin_country && origin_country[0]})`}</p>
+            </div>
             {/* <button className="info-button">
                 <span className="icon-info"></span>
             </button> */}

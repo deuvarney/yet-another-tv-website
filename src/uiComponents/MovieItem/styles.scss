@@ -5,8 +5,8 @@ $movie-item-width: 22rem;
   width: $movie-item-width;
   padding: .4rem 0;
   border-radius: 8px;
-  display: inline-block;
-  // background-color: #0C263C;
+  display: flex;
+  flex-direction: column;
   background-color: #5a6065;
   text-align: center;
   position: relative;
@@ -21,16 +21,24 @@ $movie-item-width: 22rem;
   }
 
 }
+
 .movie-image {
   max-height: 36rem;
   margin: auto;
-  margin-bottom: 1.2em;
   width: 100%;
   height: 100%;
   aspect-ratio: 2/3;
 }
 .movie-name {
   font-size: 1.6em;
+
+  &-cont {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-grow: 1;
+  }
 }
 
 .movie-release-date {
