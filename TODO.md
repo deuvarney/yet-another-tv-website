@@ -13,8 +13,8 @@
 - Settings, API Key notifications
 
 - Search List - Partial
-- Search No Results
-- Search Bar No Results
+- Search No Results - Done
+- Search Bar No Results - Done
 - Search Filters
 - Home Filters
 - Sticky Filters

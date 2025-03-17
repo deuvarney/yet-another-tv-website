@@ -301,15 +301,26 @@ function SearchTVContainer(props: SearchTVContainerProps) {
                                 />
                             }
 
-                            <ul className="searched-tv-show-list">
-                                {
-                                    searchedTvShows.slice(0, 6).map((tvShow) => (
-                                        <li key={tvShow.id} className="searched-tv-show-list-item">
-                                            <SearchedBarItem tvShow={tvShow} onShowClicked={onShowClicked} />
-                                        </li>
-                                    ))
-                                }
-                            </ul>
+                            {
+                                !!searchedTvShows.length && (
+                                    <ul className="searched-tv-show-list">
+                                        {
+                                            searchedTvShows.slice(0, 6).map((tvShow) => (
+                                                <li key={tvShow.id} className="searched-tv-show-list-item">
+                                                    <SearchedBarItem tvShow={tvShow} onShowClicked={onShowClicked} />
+                                                </li>
+                                            ))
+                                        }
+                                    </ul>
+                                )
+                            }
+                            {
+                                !searchedTvShows.length && (
+                                    <div className="searched-tv-show-list">
+                                        <p className='no-search-results-text'>No results were found for "<em>{searchQuery}</em>"</p>
+                                    </div>
+                                )
+                            }
                         </>
                     </DialogContentInline>
                 </Dialog>

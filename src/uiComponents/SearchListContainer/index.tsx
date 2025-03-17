@@ -35,7 +35,7 @@ function SearchListContainer(props: SearchListContainerProps) {
     return (
         <>
             {/* <ShowListFilters /> */}
-            <h1 className="text-4xl text-center my-4">Search Results for: <em>&quot;{props.query}&quot;</em></h1>
+            <h1 className="text-4xl text-center my-4">{!searchBarSearchTvResults.length ? 'No ': ''}Search Results for: <em>&quot;{props.query}&quot;</em></h1>
             <ul>
                 {searchBarSearchTvResults.map((tvShow) => {
                     return (
