@@ -1,4 +1,4 @@
-import {selectCurrentShowType, selectIsTrendingShowsLoading, selectPopularShowsLoadedPages, selectTrendingShowsLoadedPages} from './selectors';
+import {selectCurrentShowType, selectIsTrendingShowsLoading, selectPopularShows, selectPopularShowsLoadedPages, selectTrendingShows, selectTrendingShowsLoadedPages} from './selectors';
 import {SHOW_FILTER_TYPE} from '@/types/themoviedbTypes';
 import {fetchPopularShows, fetchPopularShowsSuccess, fetchTrendingShows, fetchTrendingShowsSuccess, setCurrentShow, setGenresFilter, setOriginalLanguagesFilter, setOriginCountriesFilter, setShowType} from './reducer';
 import type {DispatchThunk} from '@/hooks/redux';
@@ -36,7 +36,14 @@ export const getPopularShows: DispatchThunk<MovieDb> = (tmdbInstance: MovieDb) =
         dispatch(fetchPopularShows());
 
         tmdbInstance.tvPopular({page: loadedPagesCount+1, language: 'en-US'}).then((result) => {
-            dispatch(fetchPopularShowsSuccess(result.results || []));
+            const loadedPopularShows = selectPopularShows(getState());
+            const newShows = result.results?.filter((newTrendingShow)=> {
+                const showAlreadyLoaded = loadedPopularShows.find((loadedShow) => {
+                    return loadedShow.id === newTrendingShow.id
+                })
+                return !showAlreadyLoaded
+            }).filter(n=>n);
+            dispatch(fetchPopularShowsSuccess(newShows));
         });
     }
 );
@@ -56,7 +63,14 @@ export const getTrendingShows: DispatchThunk<MovieDb> = (tmdbInstance: MovieDb) 
             time_window: 'day',
             languagxe: 'en-US',
         }).then((result) => {
-            dispatch(fetchTrendingShowsSuccess((result.results || []) as TvResult[]));
+            const loadedTrendingPages = selectTrendingShows(getState());
+            const newShows = result.results?.filter((newTrendingShow)=> {
+                const showAlreadyLoaded = loadedTrendingPages.find((loadedShow) => {
+                    return loadedShow.id === newTrendingShow.id
+                })
+                return !showAlreadyLoaded
+            }).filter(n=>n);
+            dispatch(fetchTrendingShowsSuccess(newShows));
         });
     }
 );
