@@ -159,15 +159,31 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
     //  TODO: Move this to its own custom hook
     React.useEffect(() => {
         let intervalId: NodeJS.Timeout | undefined;
+
+        function setupAutoScroll() {
+            if(api){
+                intervalId = setInterval(() => {
+                    api.scrollNext();
+                }, 5000)
+            }
+        }
+        function clearAutoScroll() {
+            clearInterval(intervalId);
+        }
+
         if (api) {
-            intervalId = setInterval(() => {
-                api.scrollNext();
-            }, 5000)
+            setupAutoScroll();
+            api.on('pointerDown', clearAutoScroll)
+            api.on('pointerUp', setupAutoScroll)
         }
 
         return () => {
             if (intervalId) {
                 clearInterval(intervalId);
+            }
+            if(api) {
+                api.off('pointerDown', clearAutoScroll);
+                api.off('pointerUp', setupAutoScroll)
             }
         }
     }, [api])

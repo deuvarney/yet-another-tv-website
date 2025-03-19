@@ -30,6 +30,8 @@
 - Seasons, First Video sizing in group - Done
 - Seasons, First Video sizing when only 1 - Done
 - Seasons, Videos Container max height - Done
+- Seasons - Poster Image - Reset interval on manual image switch - Done
+- Seasons - Page state is retained even after leaving the page
 
 - Search Bar, fix animation with 2 input bars - Done
 - Search bar, add close button for when the search bar is open - DOne
@@ -43,6 +45,7 @@
 - Home - Show Item - Center Text - In Progress
 - Home - Trending > Popular > Trending Not Showing correct results - Done
 - Home - Add filter to ensure new items are not already in the existing items
+- Home - Lower percentage of page scrolled before loading more results as the count of loaded items increase
 
 - Search - Add loading indicator (toast?)
 - Search - Add Load more button
