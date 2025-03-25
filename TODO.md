@@ -45,7 +45,7 @@
 - Home - Show Item - Center Text - In Progress
 - Home - Trending > Popular > Trending Not Showing correct results - Done
 - Home - Add filter to ensure new items are not already in the existing items
-- Home - Lower percentage of page scrolled before loading more results as the count of loaded items increase
+- Home - Lower percentage of page scrolled before loading more results as the count of loaded items increase - Done
 
 - Search - Add loading indicator (toast?)
 - Search - Add Load more button

@@ -4,7 +4,7 @@ import { useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
-import { useScrollPositionExec } from '@/hooks/useScrollPosition';
+import { useDynamicScrollExec } from '@/hooks/useScrollPosition';
 import MovieItem from '../MovieItem';
 
 // import action Creators
@@ -67,7 +67,7 @@ function PopularTvShowsContainer(/*props*/) {
         }
     }, [theMovieDB]); // Only Run once
 
-    useScrollPositionExec(.75, () => {
+    useDynamicScrollExec(!!popularTvShows.length, () => {
         if(theMovieDB){
             dispatch(getShowTypeShows(theMovieDB));
         }
