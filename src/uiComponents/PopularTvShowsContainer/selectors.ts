@@ -146,7 +146,7 @@ export const selectFilteredShows = createSelector(
                 && setGenres.size === availableGenres.size
             )
         ) {
-            console.log('#selectFilteredShows: No Filter was applied')
+            // console.log('#selectFilteredShows: No Filter was applied')
             return shows;
         }
 

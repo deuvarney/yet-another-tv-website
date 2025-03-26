@@ -5,6 +5,5 @@
 // and autocompletion in the development environment.
 
 export default function basePath() {
-    console.warn('###basePath', process.env);
     return import.meta.env.VITE_WEB_BASEPATH || '/';
 }
