@@ -1,9 +1,10 @@
-export default function basePath() {
-    if (process.env.NODE_ENV === 'development') {
-        return ''
-    }
+/// <reference types="vite/client" />
 
-    // GITHUB Deployment setting
-    // TODO: Check if github supports environment variables
-    return '/yet-another-tv-website'
+// This directive references type definitions from the Vite client, which helps
+// TypeScript understand the types that Vite provides, enhancing type-checking
+// and autocompletion in the development environment.
+
+export default function basePath() {
+    console.warn('###basePath', process.env);
+    return import.meta.env.VITE_WEB_BASEPATH || '/';
 }

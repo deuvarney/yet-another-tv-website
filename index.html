@@ -1,15 +1,37 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- React Scan -->
-    <!-- <script src="https://unpkg.com/react-scan/dist/auto.global.js"></script> --> 
-    <title>Vite + React + TS</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- React Scan -->
+  <!-- <script src="https://unpkg.com/react-scan/dist/auto.global.js"></script> -->
+  <title>Vite + React + TS</title>
+
+  <!-- Process Redirects from the 404 Page -->
+  <script>
+    (function () {
+      // Check if we need to redirect
+      var redirect = sessionStorage.getItem('redirect');
+      if (redirect) {
+        // Clear the sessionStorage
+        sessionStorage.removeItem('redirect');
+
+        // Only redirect if we're on the homepage
+        if (window.location.pathname.replace(/\/+$/, '') === '{{BasePathPlaceHolder}}' ||
+          window.location.pathname === '{{BasePathPlaceHolder}}/') {
+          // Use history API to update the URL
+          window.history.replaceState(null, null, redirect);
+        }
+      }
+    })();
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

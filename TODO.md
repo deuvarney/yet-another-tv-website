@@ -24,7 +24,7 @@
 - Consolidate overview + page logic
 - Page unmounting logic?
 - Redux State Management - Done
-- Unnecessary Network Requests management
+- Unnecessary Network Requests management - Done
 
 
 - Seasons, First Video sizing in group - Done
@@ -78,4 +78,6 @@
 
 - Router, dynamic base path - Done
 
+- Deployment, redirect github 404 page to home and use SPA router to load correct page
 - Deployment, dynamically use repository name from GITHUB variables instead of hardcoding
+- Build, update to use dynamic imports as as minified files are now large
