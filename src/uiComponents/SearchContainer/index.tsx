@@ -6,7 +6,6 @@ import ArrowStepper from '../base/ArrowStepper';
 import './styles.scss';
 import Tag from '../base/Tag';
 import ShowRating from '../base/ShowRating';
-import useTheMovieDB from '@/hooks/useTheMovieDB';
 import { PlaceholderPosterImageSVG } from '../base/PlaceHolderImageSVG';
 import { genreIdMapping } from '@/constants/tvGenreMappings';
 import { TvResult } from '@/modules/moviedb-promise-main/src';
@@ -156,7 +155,6 @@ function SearchTVContainer(props: SearchTVContainerProps) {
     const { enabled } = props;
     const searchedTvShows = useAppSelector(selectSearchedTvShows);
     const dispatch = useAppDispatch();
-    const [movieDbApi] = useTheMovieDB();
     const navigate = useNavigate(); // TODO: have this passed in instead as a prop as this is too tightly coupled
     const searchQuery = useAppSelector(selectSearchQuery);
     const searchInputInfoRef = useRef<{ selectionStart: number | null, selectionEnd: number | null }>({ selectionStart: 0, selectionEnd: 0 });
@@ -178,10 +176,8 @@ function SearchTVContainer(props: SearchTVContainerProps) {
     const onSearchInputChange = useCallback((evt: React.ChangeEvent) => {
         const searchString = (evt.target as HTMLInputElement).value;
         onSearchInputSelect(evt)
-        if (movieDbApi) {
-            dispatch(updateSearchQuery({ tmdbInstance: movieDbApi, searchQuery: searchString }));
-        }
-    }, [dispatch, movieDbApi]);
+            dispatch(updateSearchQuery({ searchQuery: searchString }));
+    }, [dispatch]);
 
 
     const onSearchTVBlur = useCallback((evt: React.FocusEvent) => {

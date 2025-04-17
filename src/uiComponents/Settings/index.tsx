@@ -40,7 +40,7 @@ export default function Settings() {
         } else if (!existingAPIKey && isLocallySaved) {
             setIsLocallySaved(false);
         }
-    }, [existingAPIKey])
+    }, [existingAPIKey]);
 
     function toggleSettingsDialog() {
         if (settingsButtonRef.current) {
@@ -50,7 +50,7 @@ export default function Settings() {
 
     useEffect(() => {
         registerToggleSettingsDialogHandler(() => toggleSettingsDialog());
-        return (() => { unRegisterToggleSettingsDialogHandler(); })
+        return () => { unRegisterToggleSettingsDialogHandler(); }
     }, [])
 
     function onAPIKeyInputDoubleClick(evt: React.MouseEvent<HTMLInputElement>) {
@@ -88,7 +88,7 @@ export default function Settings() {
         }
 
         // Use the GET configuration call to determine if the key is valid/working
-        getCustomTMDB(apiKeyValue).configuration()
+        getCustomTMDB(apiKeyValue, false).configuration()
             .then((/*res*/) => {
                 localStorage.setItem('tmdbApiKey', apiKeyValue);
                 dispatch(updateAPIKey([apiKeyValue]));

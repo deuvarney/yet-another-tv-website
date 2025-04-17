@@ -43,6 +43,11 @@ export const selectPopularShowsLoadedPages = createSelector(
     (popularTvShows) => (popularTvShows.loadedPopularPages),
 );
 
+export const selectPopularTotalPages = createSelector(
+    selectPopularTvShows,
+    (popularTvShows) => (popularTvShows.totalPopularPages),
+);
+
 export const selectTrendingShows = createSelector(
     selectPopularTvShows,
     (popularTvShows) => (popularTvShows.trendingShows),
@@ -61,6 +66,11 @@ export const selectIsTrendingShowsLoading = createSelector(
 export const selectTrendingShowsLoadedPages = createSelector(
     selectPopularTvShows,
     (popularTvShows) => (popularTvShows.loadedTrendingPages),
+);
+
+export const selectTrendingTotalPages = createSelector(
+    selectPopularTvShows,
+    (popularTvShows) => (popularTvShows.totalTrendingPages),
 );
 
 

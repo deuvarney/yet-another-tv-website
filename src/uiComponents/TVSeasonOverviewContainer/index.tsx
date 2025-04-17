@@ -20,12 +20,12 @@ import { useScreenWidth } from '@/hooks/useScreenWidth';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from '@radix-ui/react-dropdown-menu';
 import TVContentMainContainer from '../TVContentMainContainer';
 import VideosDialogListContent from '../SharedComponents';
-import useTheMovieDB from '@/hooks/useTheMovieDB';
 import { useAppSelector } from '@/hooks/redux';
-import { selectIsYoutubeEnabled } from '../AppContainer/selectors';
+import { selectAPIKey, selectIsYoutubeEnabled } from '../AppContainer/selectors';
 import usePrevious from '@/hooks/usePrevious';
 import ImageLoader from '../base/ImageLoader';
 import { PlaceholderPosterImageSVG } from '../base/PlaceHolderImageSVG';
+import { getCustomTMDB } from '@/services/theMovieDbApi';
 
 
 interface TVSeasonsNavBarEpisodeItemsProps {
@@ -126,7 +126,6 @@ type TVSeasonContainerPropsType = {
 
 function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
     const { seasonNumber, showId } = props;
-
     const [episodes, setEpisodes] = useState<Episode[]>([]);
     const [seasonName, setSeasonName] = useState('');
     const [selectedEpisode, setSelectedEpisode] = useState<Episode>({});
@@ -135,6 +134,7 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
     const [seasonImages, setSeasonImages] = useState<Poster[]>([]);
     const [seasonVideos, setSeasonVideos] = useState<Video[]>([]);
     const isMobileView = useScreenWidth(600);
+    const tmdbAPIKey = useAppSelector(selectAPIKey);
     const isVideoFeatureEnabled = useAppSelector(selectIsYoutubeEnabled);
     const prevIsVideoFeatureEnabled = usePrevious(isVideoFeatureEnabled);
 
@@ -142,8 +142,6 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
 
     const [season, setSeason] = useState<Season>({});
     const [api, setApi] = React.useState<CarouselApi>();
-
-    const [movieDbApi] = useTheMovieDB();
 
     if (!!prevIsVideoFeatureEnabled && !isVideoFeatureEnabled && !!seasonVideos.length) {
         setSeasonVideos([]);
@@ -192,6 +190,7 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
     useEffect(
         // TODO: Move all of this logic to the action Creators
         () => {
+            const movieDbApi = getCustomTMDB(tmdbAPIKey);
             movieDbApi?.seasonInfo({ id: showId, season_number: seasonNumber }).then((season: Season) => {
                 setEpisodes(season.episodes || []);
                 setSeasonName(season.name || '');
@@ -213,7 +212,7 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
                 });
             }
         },
-        [movieDbApi, showId, seasonNumber, isVideoFeatureEnabled], // Run Only Once?
+        [showId, seasonNumber, isVideoFeatureEnabled, tmdbAPIKey], // Run Only Once?
     );
 
     const episodesList = getTVSeasonsNavBarEpisodeItems({

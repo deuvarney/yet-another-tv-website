@@ -4,6 +4,7 @@ export type AppSettingsType = {
     isInitialLoaded: boolean;
     apiKey: string;
     isYoutubeEnabled: boolean;
+    favoriteShowIds: number[];
 
     // Dev/Experimental Settings
     isHomeFiltersEnabled: boolean;
@@ -13,29 +14,38 @@ const initialState: AppSettingsType = {
     isInitialLoaded: false,
     apiKey: '',
     isYoutubeEnabled: false,
+    favoriteShowIds: [],
 
     isHomeFiltersEnabled: false,
 };
 
 
+type ActionType<T> = {
+    type: string,
+    payload: T
+}
+
 const appSettingsSlice = createSlice({
     name: 'appSettings',
     initialState: initialState,
     reducers: {
-        setApiKey(state, action: {type: string, payload: string}){
+        setApiKey(state, action: ActionType<string>) {
             state.apiKey = action.payload;
         },
 
-        setIsInitiaLStateoaded(state, action:{type: string, payload: boolean}){
+        setIsInitiaLStateoaded(state, action: ActionType<boolean>) {
             state.isInitialLoaded = action.payload
         },
 
-        setYoutubeEnabled(state, action: {type: string, payload: boolean}){
+        setYoutubeEnabled(state, action: ActionType<boolean>) {
             state.isYoutubeEnabled = action.payload
         },
         
-        setHomeFiltersEnabled(state, action: {type: string, payload: boolean}){
+        setHomeFiltersEnabled(state, action: ActionType<boolean>) {
             state.isHomeFiltersEnabled = action.payload
+        },
+        setFavoriteShows(state, action: ActionType<number[]>) {
+            state.favoriteShowIds = action.payload
         }
     },
 });
@@ -45,6 +55,7 @@ export const {
     setIsInitiaLStateoaded,
     setYoutubeEnabled,
     setHomeFiltersEnabled,
+    setFavoriteShows,
 } = appSettingsSlice.actions;
 export default appSettingsSlice.reducer;
 

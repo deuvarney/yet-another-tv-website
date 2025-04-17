@@ -1,11 +1,28 @@
-import {selectCurrentShowType, selectIsTrendingShowsLoading, selectPopularShows, selectPopularShowsLoadedPages, selectTrendingShows, selectTrendingShowsLoadedPages} from './selectors';
+import {selectCurrentShowType, selectIsPopularShowsLoading, selectIsTrendingShowsLoading, selectPopularShows, selectPopularShowsLoadedPages, selectPopularTotalPages, selectTrendingShows, selectTrendingShowsLoadedPages, selectTrendingTotalPages} from './selectors';
 import {SHOW_FILTER_TYPE} from '@/types/themoviedbTypes';
 import {fetchPopularShows, fetchPopularShowsSuccess, fetchTrendingShows, fetchTrendingShowsSuccess, setCurrentShow, setGenresFilter, setOriginalLanguagesFilter, setOriginCountriesFilter, setShowType} from './reducer';
 import type {DispatchThunk} from '@/hooks/redux';
-import { MovieDb } from '@/services/theMovieDbApi';
+import { getCustomTMDB } from '@/services/theMovieDbApi';
+import { selectAPIKey } from '../AppContainer/selectors';
+import { RootState } from '@/store/configureStore';
 
-export const updateSelectedShowType: DispatchThunk<{selectedShowType:SHOW_FILTER_TYPE, tmdbInstance: MovieDb}> = ({selectedShowType, tmdbInstance}) => (
+// TODO: Centralize this to a new file
+function getTMDBInstance(getState: () => RootState) {
+    const tmdbAPIKey = selectAPIKey(getState());
+    if(!tmdbAPIKey) {
+        return;
+    }
+    return getCustomTMDB(tmdbAPIKey);
+}
+
+export const updateSelectedShowType: DispatchThunk<{selectedShowType:SHOW_FILTER_TYPE}> = ({selectedShowType,}) => (
     (dispatch, getState) => {
+
+        const tmdbInstance = getTMDBInstance(getState);
+        if(!tmdbInstance) {
+            return;
+        }
+
         const currentShowType = selectCurrentShowType(getState());
         if (currentShowType === selectedShowType) {
             return;
@@ -21,17 +38,29 @@ export const updateSelectedShowType: DispatchThunk<{selectedShowType:SHOW_FILTER
         default:
             dispatchee = getPopularShows;
         }
-        dispatch(dispatchee(tmdbInstance));
+        dispatch(dispatchee());
     }
 );
 
-export const getPopularShows: DispatchThunk<MovieDb> = (tmdbInstance: MovieDb) => (
+export const getPopularShows: DispatchThunk = () => (
     (dispatch, getState) => {
-        const loadedPagesCount = selectPopularShowsLoadedPages(getState());
 
-        if (selectIsTrendingShowsLoading(getState())) {
+        const tmdbInstance = getTMDBInstance(getState);
+        if(!tmdbInstance) {
             return;
         }
+
+        const loadedPagesCount = selectPopularShowsLoadedPages(getState());
+
+        if (selectIsPopularShowsLoading(getState())) {
+            return;
+        }
+
+        const totalPopularPages = selectPopularTotalPages(getState());
+        console.log('###totalPopularPages', totalPopularPages, "loadedPagesCount", loadedPagesCount)
+        if ( totalPopularPages && (loadedPagesCount >= totalPopularPages)) { return; }
+
+
         dispatch(fetchPopularShows());
 
         tmdbInstance.tvPopular({page: loadedPagesCount+1, language: 'en-US'}).then((result) => {
@@ -42,17 +71,30 @@ export const getPopularShows: DispatchThunk<MovieDb> = (tmdbInstance: MovieDb) =
                 })
                 return !showAlreadyLoaded
             }).filter(n=>n);
-            dispatch(fetchPopularShowsSuccess(newShows));
+            dispatch(fetchPopularShowsSuccess({...result, results: newShows}));
         });
     }
 );
 
-export const getTrendingShows: DispatchThunk<MovieDb> = (tmdbInstance: MovieDb) => (
+export const getTrendingShows: DispatchThunk = () => (
     (dispatch, getState) => {
+
+        const tmdbInstance = getTMDBInstance(getState);
+        if(!tmdbInstance) {
+            return;
+        }
+
         const loadedPagesCount = selectTrendingShowsLoadedPages(getState());
         if (selectIsTrendingShowsLoading(getState())) {
             return;
         }
+
+        const totalTrendingPages = selectTrendingTotalPages(getState());
+
+        console.log('###totalTrendingPages', totalTrendingPages, "loadedPagesCount", loadedPagesCount)
+
+        if ( totalTrendingPages && loadedPagesCount >= totalTrendingPages ) { return; }
+        
         dispatch(fetchTrendingShows());
 
         tmdbInstance.trending({
@@ -69,23 +111,30 @@ export const getTrendingShows: DispatchThunk<MovieDb> = (tmdbInstance: MovieDb) 
                 })
                 return !showAlreadyLoaded
             }).filter(n=>n);
-            dispatch(fetchTrendingShowsSuccess(newShows));
+            dispatch(fetchTrendingShowsSuccess({...result, results: newShows}));
         });
     }
 );
 
-export const getShowTypeShows: DispatchThunk<MovieDb> = (tmdbInstance: MovieDb) => (
+export const getShowTypeShows: DispatchThunk = () => (
     (dispatch, getState) => {
+        
         if (selectCurrentShowType(getState()) === SHOW_FILTER_TYPE.SHOW_TYPE_POPULAR) {
-            return dispatch(getPopularShows(tmdbInstance));
+            return dispatch(getPopularShows());
         }
-        dispatch(getTrendingShows(tmdbInstance));
+        dispatch(getTrendingShows());
     }
 );
 
 
-export const getCurrentShowInfo: DispatchThunk<{showId:number, tmdbInstance: MovieDb}> = ({showId, tmdbInstance}) => (
-    (dispatch/*, getState*/) => {
+export const getCurrentShowInfo: DispatchThunk<{showId:number}> = ({showId}) => (
+    (dispatch, getState) => {
+
+        const tmdbInstance = getTMDBInstance(getState);
+        if(!tmdbInstance) {
+            return;
+        }
+
         tmdbInstance.tvInfo({id: showId}).then((tvShow) => {
         // this.setState({tvShow});
             dispatch(setCurrentShow(tvShow));

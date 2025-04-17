@@ -18,7 +18,6 @@ import TVRecentEpisodesTabs from '../RecentEpisodeTabs';
 import TVContentMainContainer from '../TVContentMainContainer';
 import { useScreenWidth } from '@/hooks/useScreenWidth';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from '@radix-ui/react-dropdown-menu';
-import useTheMovieDB from '@/hooks/useTheMovieDB';
 
 interface SideNavProps {
     fullWidth?: boolean;
@@ -44,13 +43,10 @@ function TVSeasonsContainer(props: TVSeasonsContainerPropsType) {
     const tvShow = useSelector(selectCurrentShow);
     const dispatch = useAppDispatch();
     const isMobileView = useScreenWidth(600);
-    const [tmdbInstance] = useTheMovieDB();
 
     useEffect(() => {
-        if(tmdbInstance){
-            dispatch(getCurrentShowInfo({showId, tmdbInstance}));
-        }
-    }, [showId, tmdbInstance]);
+            dispatch(getCurrentShowInfo({showId}));
+    }, [dispatch, showId]);
 
     const {
         backdrop_path: backdropPath,

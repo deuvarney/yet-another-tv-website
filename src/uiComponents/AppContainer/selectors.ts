@@ -30,3 +30,10 @@ export const selectIsYoutubeEnabled = createSelector(
         return appState.isYoutubeEnabled;
     }
 )
+
+export const selectFavoriteShows = createSelector(
+    appSettings,
+    (appState) => {
+        return appState.favoriteShowIds;
+    }
+)

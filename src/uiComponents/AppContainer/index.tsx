@@ -36,7 +36,7 @@ const WrappedTVSeasonContainer = (/* props*/) => {
 };
 
 const WrappedSearchShowContainer = (/* props */) => {
-    const [paramsz, _fn] = useSearchParams();
+    const [paramsz /*, _fn */] = useSearchParams();
     return <SearchListContainer query={paramsz.get('q') || ''} />
 }
 
@@ -123,7 +123,7 @@ function App() {
 
     useEffect(() => {
         dispatch(loadApplicationSettings());
-    }, []);
+    }, [dispatch]); // Should only run once
 
     return (
         <Router basename={basePath()}>

@@ -1,4 +1,3 @@
-import useTheMovieDB from "@/hooks/useTheMovieDB";
 import { useEffect } from "react";
 import { SearchedBarItem } from "../SearchContainer";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
@@ -13,23 +12,19 @@ interface SearchListContainerProps {
 
 function SearchListContainer(props: SearchListContainerProps) {
 
-    const [movieDbApi] = useTheMovieDB();
-
     const dispatch = useAppDispatch();
     const searchBarSearchTvResults = useAppSelector(selectSearchedTVShowsListPageResults);
     const loadedSearchResultsPagesCount = useAppSelector(selectSearchedTVShowsListPageLoadedCount);
     const searchQuery = props.query.trim();
 
     useEffect(() => {
-        console.log("SearchListContainer useEffect called", loadedSearchResultsPagesCount, searchQuery, movieDbApi);
-        if (!loadedSearchResultsPagesCount && searchQuery && movieDbApi) {
-            dispatch(queryMoreSearchListResults({ tmdbInstance: movieDbApi, searchQuery }));
+        if (!loadedSearchResultsPagesCount && searchQuery) {
+            dispatch(queryMoreSearchListResults({ searchQuery }));
         }
-    }, [movieDbApi]);
+    }, []);
 
     useScrollPositionExec(.75, () => {
-        if(!movieDbApi) { return; }
-        dispatch(queryMoreSearchListResults({ tmdbInstance: movieDbApi, searchQuery }));
+        dispatch(queryMoreSearchListResults({ searchQuery }));
     });
 
     return (

@@ -17,8 +17,8 @@ import './styles.scss';
 import { SHOW_FILTER_TYPE, type Show } from '@/types/themoviedbTypes';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import ShowListFilters from './ShowListFilters';
-import useTheMovieDB from '@/hooks/useTheMovieDB';
 import { selectIsHomeFiltersEnabled } from '../AppContainer/selectors';
+import { toggleFavoriteShow } from '../AppContainer/actionCreators';
 
 type ShowsGridViewProps = {
     isPoplularBtnDisabled?: boolean;
@@ -27,6 +27,7 @@ type ShowsGridViewProps = {
     onTrendingClicked: () => void;
     shows: Show[];
     showHomeFilters: boolean;
+    onFavoriteToggle: (id: number) => void;
 }
 
 function ShowsGridView(props: ShowsGridViewProps) {
@@ -43,7 +44,7 @@ function ShowsGridView(props: ShowsGridViewProps) {
                 {
                     props.shows.map((currentTvShow) => (
                         <Link className='movie-item-link' key={currentTvShow.id} to={`/show/${currentTvShow.id}`}>
-                            <MovieItem {...currentTvShow} />
+                            <MovieItem {...currentTvShow} onFavoriteToggle={props.onFavoriteToggle}/>
                         </Link>
                     ))
                 }
@@ -57,37 +58,31 @@ function PopularTvShowsContainer(/*props*/) {
     const popularTvShows = useAppSelector(selectFilteredShows);
     const showType = useAppSelector(selectCurrentShowType);
     const showHomeFilters = useAppSelector(selectIsHomeFiltersEnabled);
-    const [theMovieDB] = useTheMovieDB();
     const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        // this.props.updatePopularShows();
-        if(theMovieDB){
-            dispatch(getShowTypeShows(theMovieDB));
-        }
-    }, [theMovieDB]); // Only Run once
+    useEffect(() => {       
+            dispatch(getShowTypeShows());
+    }, []); // Only Run once
 
     useDynamicScrollExec(!!popularTvShows.length, () => {
-        if(theMovieDB){
-            dispatch(getShowTypeShows(theMovieDB));
-        }
+            dispatch(getShowTypeShows());
     });
 
     const onTrendingClicked = useCallback((/* evt*/) => {
-        if(!theMovieDB) {return;}
         dispatch(updateSelectedShowType({
             selectedShowType: SHOW_FILTER_TYPE.SHOW_TYPE_TRENDING,
-            tmdbInstance: theMovieDB
         }));
-    }, [dispatch, theMovieDB]);
+    }, [dispatch]);
 
     const onPopularClicked = useCallback((/* evt*/) => {
-        if(!theMovieDB) {return;}
         dispatch(updateSelectedShowType({
             selectedShowType: SHOW_FILTER_TYPE.SHOW_TYPE_POPULAR,
-            tmdbInstance: theMovieDB
         }));
-    }, [dispatch, theMovieDB]);
+    }, [dispatch]);
+
+    const onFavoriteToggle = useCallback((id: number) => {
+        dispatch(toggleFavoriteShow(id));
+    }, [dispatch]);
 
     const isTrendingBtnDisabled = showType === SHOW_FILTER_TYPE.SHOW_TYPE_TRENDING;
     const isPoplularBtnDisabled = !isTrendingBtnDisabled;
@@ -100,6 +95,7 @@ function PopularTvShowsContainer(/*props*/) {
             isPoplularBtnDisabled={isPoplularBtnDisabled}
             isTrendingBtnDisabled={isTrendingBtnDisabled}
             showHomeFilters={showHomeFilters}
+            onFavoriteToggle={onFavoriteToggle}
         />
     );
 }

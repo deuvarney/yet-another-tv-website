@@ -11,6 +11,7 @@ export type PopularTvShowsType = {
     isPopularShowsLoading: boolean,
     isPopularShowsLoaded: boolean,
     loadedPopularPages: number,
+    totalPopularPages: number,
 
     apiKey: string,
 
@@ -19,6 +20,7 @@ export type PopularTvShowsType = {
     // TODO: Abstract this logic with TypeScript
     isTrendingShowsLoading: boolean,
     isTrendingShowsLoaded: boolean,
+    totalTrendingPages: number,
     trendingShows: Show[],
     // error: null, // no case for this yet
     loadedTrendingPages: number,
@@ -38,6 +40,7 @@ const initialState: PopularTvShowsType = {
     isPopularShowsLoading: false,
     isPopularShowsLoaded: false,
     loadedPopularPages: 0,
+    totalPopularPages: 0,
 
     apiKey: '',
 
@@ -47,6 +50,7 @@ const initialState: PopularTvShowsType = {
     // TODO: Abstract this logic with TypeScript
     isTrendingShowsLoading: false,
     isTrendingShowsLoaded: false,
+    totalTrendingPages: 0,
     trendingShows: [],
     // error: null, // no case for this yet
 
@@ -70,20 +74,26 @@ const popularTvShowsSlice = createSlice({
             state.isPopularShowsLoading = true;
         },
         fetchTrendingShows(state, /*action*/) {
-            state.showType= SHOW_FILTER_TYPE.SHOW_TYPE_TRENDING;
-            state.isTrendingShowsLoading= true;
+            state.showType = SHOW_FILTER_TYPE.SHOW_TYPE_TRENDING;
+            state.isTrendingShowsLoading = true;
         },
         fetchPopularShowsSuccess(state, action) {
             state.isPopularShowsLoaded = true;
             state.isPopularShowsLoading = false;
-            state.popularShows = state.popularShows.concat(action.payload);
+            state.popularShows = state.popularShows.concat(action.payload.results);
             state.loadedPopularPages = state.loadedPopularPages + 1;
+            if(state.totalPopularPages !== action.payload.total_pages) {
+                state.totalPopularPages = action.payload.total_pages;
+            }
         },
         fetchTrendingShowsSuccess(state, action) {
             state.isTrendingShowsLoaded = true;
             state.isTrendingShowsLoading = false;
-            state.trendingShows = state.trendingShows.concat(action.payload);
+            state.trendingShows = state.trendingShows.concat(action.payload.results);
             state.loadedTrendingPages = state.loadedTrendingPages + 1;
+            if(state.totalTrendingPages !== action.payload.total_pages) {
+                state.totalTrendingPages = action.payload.total_pages;
+            }
         },
         setShowType(state, action) {
             state.showType = action.payload;

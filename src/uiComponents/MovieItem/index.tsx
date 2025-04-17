@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import ImageLoader from '../base/ImageLoader';
 import { PlaceholderPosterImageSVG } from '../base/PlaceHolderImageSVG';
 import './styles.scss';
@@ -21,8 +22,14 @@ function MovieImagePoster(props: MovieImagePosterProps) {
         : <PlaceholderPosterImageSVG className='movie-image' />;
 }
 
-function MovieItem(props: Show) {
-    const { id, poster_path, name, original_name, year, origin_country } = props;
+function MovieItem(props: Show & { onFavoriteToggle: (id: number) => void}) {
+    const { id, poster_path, name, original_name, year, origin_country, onFavoriteToggle } = props;
+    
+    const onFavoritesToggleClick = useCallback((evt: React.MouseEvent) => {
+        evt.preventDefault();
+        onFavoriteToggle(id);
+    }, [id, onFavoriteToggle]);
+    
     return (
         <div className="movie-item" key={id}>
             <MovieImagePoster poster_path={poster_path} name={name} />
@@ -30,9 +37,9 @@ function MovieItem(props: Show) {
                 <p className="movie-name">{name || original_name}</p>
                 <p className="movie-release-date">{`${year || ''} (${origin_country && origin_country[0]})`}</p>
             </div>
-            {/* <button className="info-button">
+            <button onClick={onFavoritesToggleClick} className="info-button" style={{ display: 'none'}}>
                 <span className="icon-info"></span>
-            </button> */}
+            </button>
         </div>
     );
 }

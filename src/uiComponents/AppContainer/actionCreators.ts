@@ -1,12 +1,13 @@
 import { DispatchThunk } from "@/hooks/redux";
-import { setApiKey, setHomeFiltersEnabled, setYoutubeEnabled } from "./reducer";
-import { selectAPIKey, selectIsYoutubeEnabled, selectIsHomeFiltersEnabled } from "./selectors";
+import { setApiKey, setFavoriteShows, setHomeFiltersEnabled, setYoutubeEnabled } from "./reducer";
+import { selectAPIKey, selectIsYoutubeEnabled, selectIsHomeFiltersEnabled, selectFavoriteShows } from "./selectors";
 
 
 enum LOCAL_STORAGE_KEYS {
     TMDB_API_KEY = 'tmdbApiKey',
     IS_YOUTUBE_ENABLED = 'isYoutubeEnabled',
     IS_HOME_FILTERS_ENABLED = 'isHomeFiltersEnabled',
+    FAVORITE_SHOWS = 'favoriteShows',
 }
 
 export const updateAPIKey: DispatchThunk<[string, boolean?]> = ([apiKey, shouldSave = true]) => {
@@ -45,6 +46,41 @@ export const updateIsHomeFiltersEnabled: DispatchThunk<[boolean, boolean?]> = ([
     };
 }
 
+export const updateFavoriteShows: DispatchThunk<[number[], boolean?]> = ([favoriteShows, shouldSave = true]) => {
+    return (dispatch/*, getState*/) => {
+        dispatch(setFavoriteShows(favoriteShows));
+        if (shouldSave) {
+            localStorage.setItem(LOCAL_STORAGE_KEYS.FAVORITE_SHOWS, JSON.stringify(favoriteShows));
+        }
+    };
+}
+
+export const addFavoriteShow: DispatchThunk<[number]> = ([showId]) => {
+    return (dispatch, getState) => {
+        const favoriteShows = selectFavoriteShows(getState());
+        const updatedFavoriteShows = [...favoriteShows, showId];
+        dispatch(updateFavoriteShows([updatedFavoriteShows]));
+    };
+}
+
+export const removeFavoriteShow: DispatchThunk<[number]> = ([showId]) => {
+    return (dispatch, getState) => {
+        const favoriteShows = selectFavoriteShows(getState());
+        dispatch(updateFavoriteShows([favoriteShows.filter((id) => id !== showId)]));
+    };
+}
+
+export const  toggleFavoriteShow: DispatchThunk<number> = (showId) => {
+    return (dispatch, getState) => {
+        const favoriteShows = selectFavoriteShows(getState());
+        if (favoriteShows.includes(showId)) {
+            dispatch(removeFavoriteShow([showId]));
+        } else {
+            dispatch(addFavoriteShow([showId]));
+        }
+    };
+}
+
 export const loadApplicationSettings: DispatchThunk = () => {
     return (dispatch/*, getState*/) => {
         // Check if the tmdb API Key is already set in the user's browser and add it to redux state
@@ -61,6 +97,11 @@ export const loadApplicationSettings: DispatchThunk = () => {
         const localIsHomeFiltersEnabled = localStorage.getItem(LOCAL_STORAGE_KEYS.IS_HOME_FILTERS_ENABLED);
         if (localIsHomeFiltersEnabled) {
             dispatch(updateIsHomeFiltersEnabled([localIsHomeFiltersEnabled === '1']));
+        }
+
+        const localFavoriteShows = localStorage.getItem(LOCAL_STORAGE_KEYS.FAVORITE_SHOWS);
+        if (localFavoriteShows) {
+            dispatch(updateFavoriteShows([JSON.parse(localFavoriteShows)]));
         }
     };
 }

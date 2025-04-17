@@ -19,10 +19,10 @@ import { EpisodeVideosResponse, Video } from '@/modules/moviedb-promise-main/src
 import BackgroundPageImages from '../base/BackgroundPageImages';
 import TVContentMainContainer from '../TVContentMainContainer';
 import VideosDialogListContent from '../SharedComponents';
-import useTheMovieDB from '@/hooks/useTheMovieDB';
 import { useAppSelector } from '@/hooks/redux';
-import { selectIsYoutubeEnabled } from '../AppContainer/selectors';
+import { selectAPIKey, selectIsYoutubeEnabled } from '../AppContainer/selectors';
 import usePrevious from '@/hooks/usePrevious';
+import { getCustomTMDB } from '@/services/theMovieDbApi';
 
 
 
@@ -119,7 +119,7 @@ function TVSeasonContainer(props: TVSeasonContainerPropsType) {
     // const [seasonImages, setSeasonImages] = useState<TvSeasonRequest[]>([]);
     const [episodeVideos, setEpisodeVideos] = useState<Video[]>([]);
     const isMobileView = useScreenWidth(600);
-    const [movieDbApi] = useTheMovieDB();
+    const tmdbAPIKey = useAppSelector(selectAPIKey);
 
     const isVideoFeatureEnabled = useAppSelector(selectIsYoutubeEnabled);
     const prevIsVideoFeatureEnabled = usePrevious(isVideoFeatureEnabled);
@@ -141,6 +141,7 @@ function TVSeasonContainer(props: TVSeasonContainerPropsType) {
         // TODO: Move all of this logic to the action Creators
 
         () => {
+            const movieDbApi = getCustomTMDB(tmdbAPIKey);
             movieDbApi?.seasonInfo({ id: showId, season_number: seasonNumber }).then((season: Season) => {
                 setEpisodes(season.episodes || []);
                 setSeasonName(season.name || '');
@@ -155,10 +156,12 @@ function TVSeasonContainer(props: TVSeasonContainerPropsType) {
                 setTvShow(tvShow);
             })
         },
-        [movieDbApi, showId, seasonNumber], // Run Only Once
+        [showId, seasonNumber, tmdbAPIKey], // Run Only Once
     );
 
     useEffect(() => {
+        const movieDbApi = getCustomTMDB(tmdbAPIKey);
+
         const currEpisodeNum =
             episodeNumberPropValue
             || selectedEpisode?.episode_number
@@ -174,7 +177,7 @@ function TVSeasonContainer(props: TVSeasonContainerPropsType) {
             });
         }
     },
-        [movieDbApi, showId, seasonNumber, episodeNumberPropValue, isVideoFeatureEnabled],
+        [showId, seasonNumber, episodeNumberPropValue, isVideoFeatureEnabled, tmdbAPIKey],
     );
 
 

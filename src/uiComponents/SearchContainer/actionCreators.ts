@@ -1,12 +1,27 @@
 import type { DispatchThunk } from '@/hooks/redux';
-import { MovieDb } from '@/services/theMovieDbApi';
+import { getCustomTMDB } from '@/services/theMovieDbApi';
 import { selectAvailablePages, selectLoadedPagesCount, selectSearchedTvShows, selectSearchedTVShowsListPageCanLoadMorePages, selectSearchedTVShowsListPageLoadedCount, selectSearchListRequestIsLoading, selectSearchQuery, selectSearchTvShowListSearchQuery } from './selectors';
 import { clearSearchedShows, fetchSearchShowsFailure, fetchSearchShowsListFailure, fetchSearchShowsListRequest, fetchSearchShowsListSuccess, fetchSearchShowsRequest, fetchSearchShowsSuccess, setSearchedTvShowsListResults, setSearchQuery } from './reducer';
+import { RootState } from '@/store/configureStore';
+import { selectAPIKey } from '../AppContainer/selectors';
 
+// TODO: Centralize this to a new file
+function getTMDBInstance(getState: () => RootState) {
+    const tmdbAPIKey = selectAPIKey(getState());
+    if(!tmdbAPIKey) {
+        return;
+    }
+    return getCustomTMDB(tmdbAPIKey);
+}
 
-
-export const updateSearchQuery: DispatchThunk<{ tmdbInstance: MovieDb, searchQuery: string }> = ({ tmdbInstance, searchQuery }) => (
+export const updateSearchQuery: DispatchThunk<{ searchQuery: string }> = ({ searchQuery }) => (
     (dispatch, getState) => {
+
+        const tmdbInstance = getTMDBInstance(getState);
+        if(!tmdbInstance) {
+            return;
+        }
+
         const currentSearchQuery = selectSearchQuery(getState());
         if (searchQuery !== currentSearchQuery) {
 
@@ -32,8 +47,14 @@ export const updateSearchQuery: DispatchThunk<{ tmdbInstance: MovieDb, searchQue
     }
 );
 
-export const queryMoreSearchListResults: DispatchThunk<{ tmdbInstance: MovieDb, searchQuery: string }> = ({ tmdbInstance, searchQuery }) => (
+export const queryMoreSearchListResults: DispatchThunk<{ searchQuery: string }> = ({ searchQuery }) => (
     (dispatch, getState) => {
+
+        const tmdbInstance = getTMDBInstance(getState);
+        if(!tmdbInstance) {
+            return;
+        }
+
         const loadedSearchResultsPagesCount = selectSearchedTVShowsListPageLoadedCount(getState());
         // TODO: Update this logic to check if available page count against the current loaded count
         if (
