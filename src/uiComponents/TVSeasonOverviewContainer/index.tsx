@@ -309,7 +309,6 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
                                                             <ImageLoader
                                                                 src={`https://image.tmdb.org/t/p/w300${image.file_path}`}
                                                                 alt={`Poster image of ${tvShow.name}`}
-                                                                aspectRatio='2/3'
                                                                 className='TVSeasonOverviewContent-overview-seasonImages-img'
                                                                 placeholderComp={<PlaceholderPosterImageSVG className='animate-pulse TVSeasonOverviewContent-overview-seasonImages-img' />}
                                                                 fallbackComp={<PlaceholderPosterImageSVG className='TVSeasonOverviewContent-overview-seasonImages-img' />}
