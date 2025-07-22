@@ -3,6 +3,7 @@
 import { useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Helmet } from 'react-helmet-async';
 
 import { useDynamicScrollExec } from '@/hooks/useScrollPosition';
 import MovieItem from '../MovieItem';
@@ -37,7 +38,7 @@ function ShowsGridView(props: ShowsGridViewProps) {
                 <Button disabled={props.isTrendingBtnDisabled} onClick={props.onTrendingClicked}>Trending</Button>
             </div>
 
-            { !!props.showHomeFilters && <ShowListFilters /> }
+            {!!props.showHomeFilters && <ShowListFilters />}
 
             <div className="popular-tv-shows">
                 {
@@ -62,19 +63,19 @@ function PopularTvShowsContainer(/*props*/) {
 
     useEffect(() => {
         // this.props.updatePopularShows();
-        if(theMovieDB){
+        if (theMovieDB) {
             dispatch(getShowTypeShows(theMovieDB));
         }
     }, [theMovieDB]); // Only Run once
 
     useDynamicScrollExec(!!popularTvShows.length, () => {
-        if(theMovieDB){
+        if (theMovieDB) {
             dispatch(getShowTypeShows(theMovieDB));
         }
     });
 
     const onTrendingClicked = useCallback((/* evt*/) => {
-        if(!theMovieDB) {return;}
+        if (!theMovieDB) { return; }
         dispatch(updateSelectedShowType({
             selectedShowType: SHOW_FILTER_TYPE.SHOW_TYPE_TRENDING,
             tmdbInstance: theMovieDB
@@ -82,7 +83,7 @@ function PopularTvShowsContainer(/*props*/) {
     }, [dispatch, theMovieDB]);
 
     const onPopularClicked = useCallback((/* evt*/) => {
-        if(!theMovieDB) {return;}
+        if (!theMovieDB) { return; }
         dispatch(updateSelectedShowType({
             selectedShowType: SHOW_FILTER_TYPE.SHOW_TYPE_POPULAR,
             tmdbInstance: theMovieDB
@@ -91,16 +92,23 @@ function PopularTvShowsContainer(/*props*/) {
 
     const isTrendingBtnDisabled = showType === SHOW_FILTER_TYPE.SHOW_TYPE_TRENDING;
     const isPoplularBtnDisabled = !isTrendingBtnDisabled;
+    const pageName = showType === SHOW_FILTER_TYPE.SHOW_TYPE_TRENDING ? 'Trending' : 'Popular';
 
     return (
-        <ShowsGridView
-            shows={popularTvShows}
-            onPopularClicked={onPopularClicked}
-            onTrendingClicked={onTrendingClicked}
-            isPoplularBtnDisabled={isPoplularBtnDisabled}
-            isTrendingBtnDisabled={isTrendingBtnDisabled}
-            showHomeFilters={showHomeFilters}
-        />
+        <>
+
+            <Helmet>
+                <title>{pageName} TV Shows - YATW</title>
+            </Helmet>
+            <ShowsGridView
+                shows={popularTvShows}
+                onPopularClicked={onPopularClicked}
+                onTrendingClicked={onTrendingClicked}
+                isPoplularBtnDisabled={isPoplularBtnDisabled}
+                isTrendingBtnDisabled={isTrendingBtnDisabled}
+                showHomeFilters={showHomeFilters}
+            />
+        </>
     );
 }
 

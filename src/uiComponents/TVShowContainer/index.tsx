@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 import TVSeasonsSideNav, { TvSeasonsNavBarListItem } from '../TVSeasonsNavBar';
 
@@ -23,15 +24,15 @@ import useTheMovieDB from '@/hooks/useTheMovieDB';
 interface SideNavProps {
     fullWidth?: boolean;
     seasonsList: JSX.Element[]; // or whatever type seasonsList is
-  }
-  
-  
+}
 
-function SideNav(props: SideNavProps){
+
+
+function SideNav(props: SideNavProps) {
     return (
-    <TVSeasonsSideNav fullWidth={props.fullWidth} header={'Seasons'}>
-        {props.seasonsList}
-    </TVSeasonsSideNav>
+        <TVSeasonsSideNav fullWidth={props.fullWidth} header={'Seasons'}>
+            {props.seasonsList}
+        </TVSeasonsSideNav>
     );
 }
 
@@ -47,8 +48,8 @@ function TVSeasonsContainer(props: TVSeasonsContainerPropsType) {
     const [tmdbInstance] = useTheMovieDB();
 
     useEffect(() => {
-        if(tmdbInstance){
-            dispatch(getCurrentShowInfo({showId, tmdbInstance}));
+        if (tmdbInstance) {
+            dispatch(getCurrentShowInfo({ showId, tmdbInstance }));
         }
     }, [showId, tmdbInstance]);
 
@@ -94,16 +95,19 @@ function TVSeasonsContainer(props: TVSeasonsContainerPropsType) {
                     <SideNav seasonsList={seasonsList} />
                 )
             }
+            <Helmet>
+                <title>{name || 'Loading...'} - YATW</title>
+            </Helmet>
 
             <TVContentMainContainer>
                 <ContentContainer className='TVSeasonsContentz-MainCont'>
-                {
+                    {
                         isMobileView ? (
                             <DropdownMenu>
-                                <DropdownMenuTrigger style={{background: 'none'}}>
+                                <DropdownMenuTrigger style={{ background: 'none' }}>
                                     <IconWithText>
-                                    <ContextContainerText_H1 className="TVSeasonsContentz-Name">{name}</ContextContainerText_H1>
-                                    <ChevronDownIcon className='bouncing-element' size={24} style={{paddingLeft: '.8rem'}} />
+                                        <ContextContainerText_H1 className="TVSeasonsContentz-Name">{name}</ContextContainerText_H1>
+                                        <ChevronDownIcon className='bouncing-element' size={24} style={{ paddingLeft: '.8rem' }} />
                                     </IconWithText>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align='start' style={{ zIndex: 1 }}>
@@ -111,7 +115,7 @@ function TVSeasonsContainer(props: TVSeasonsContainerPropsType) {
                                         !!isMobileView && (
                                             <SideNav
                                                 fullWidth
-                                                seasonsList={seasonsList} 
+                                                seasonsList={seasonsList}
                                             />
                                         )
                                     }

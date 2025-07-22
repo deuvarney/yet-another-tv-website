@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Routes, Link, useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 
 import PopularTvShowsContainer from '../PopularTvShowsContainer';
 import TVSeasonsContainer from '../TVShowContainer';
@@ -84,7 +85,7 @@ function AppRoutes() {
 
 interface AppContainerContentProps {
     apiKey: string;
-  }
+}
 
 function AppContainerContent(props: AppContainerContentProps) {
 
@@ -96,7 +97,7 @@ function AppContainerContent(props: AppContainerContentProps) {
     return (
         <div className="AppContainer">
             <header className="header flex justify-between items-center">
-                <Link aria-label="Home" className='ml-2' to="/"><YATWLogo className='h-12 pt-1'/></Link>
+                <Link aria-label="Home" className='ml-2' to="/"><YATWLogo className='h-12 pt-1' /></Link>
                 <Settings />
             </header>
             {
@@ -107,7 +108,9 @@ function AppContainerContent(props: AppContainerContentProps) {
             }
 
             <main className="main">
-                {apiKey ? <AppRoutes /> : <NoAPIKeyMessageRoutes />}
+                <HelmetProvider>
+                    {apiKey ? <AppRoutes /> : <NoAPIKeyMessageRoutes />}
+                </HelmetProvider>
             </main>
             <footer className="footer">
                 <p>Last but not least, an awesome footer</p>

@@ -1,7 +1,11 @@
+import { Helmet } from 'react-helmet-async';
+
 function TermsOfServiceContainer() {
     return (
         <div className="w-[100%] md:w-[80%] m-auto pt-16 [&_section]:my-8 [&_section]:text-2xl [&_section]:bg-slate-950 [&_section]:mx-8 [&_section]:p-5 [&_h2]:text-4xl [&_h2]:pb-6 [&_li]:mb-3">
-
+            <Helmet>
+                <title>Terms of Service - YATW</title>
+            </Helmet>
             <h1 className="text-center">Terms of Service/Data Usage</h1>
 
             <section>

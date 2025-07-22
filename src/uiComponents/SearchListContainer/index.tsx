@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { selectSearchedTVShowsListPageLoadedCount, selectSearchedTVShowsListPageResults } from "../SearchContainer/selectors";
 import { queryMoreSearchListResults } from "../SearchContainer/actionCreators";
 import { useScrollPositionExec } from '@/hooks/useScrollPosition';
+import { Helmet } from 'react-helmet-async';
 
 
 interface SearchListContainerProps {
@@ -28,20 +29,23 @@ function SearchListContainer(props: SearchListContainerProps) {
     }, [movieDbApi]);
 
     useScrollPositionExec(.75, () => {
-        if(!movieDbApi) { return; }
+        if (!movieDbApi) { return; }
         dispatch(queryMoreSearchListResults({ tmdbInstance: movieDbApi, searchQuery }));
     });
 
     return (
         <>
+            <Helmet>
+                <title>{searchQuery} - YATW Search</title>
+            </Helmet>
             {/* <ShowListFilters /> */}
-            <h1 className="text-4xl text-center my-4">{!searchBarSearchTvResults.length ? 'No ': ''}Search Results for: <em>&quot;{props.query}&quot;</em></h1>
+            <h1 className="text-4xl text-center my-4">{!searchBarSearchTvResults.length ? 'No ' : ''}Search Results for: <em>&quot;{props.query}&quot;</em></h1>
             <ul>
                 {searchBarSearchTvResults.map((tvShow) => {
                     return (
                         <li key={tvShow.id} className="searched-tv-show-list-item mb-4 p-3 h-56">
                             {/* TODO: Temp import */}
-                            <SearchedBarItem tvShow={tvShow} onShowClicked={() => { }} maxGenreIds={4}/>
+                            <SearchedBarItem tvShow={tvShow} onShowClicked={() => { }} maxGenreIds={4} />
                         </li>
                     );
                 })}

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+
 
 import TVSeasonsSideNav, { TvSeasonsNavBarListItem } from '../TVSeasonsNavBar';
 
@@ -161,7 +163,7 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
         let intervalId: NodeJS.Timeout | undefined;
 
         function setupAutoScroll() {
-            if(api){
+            if (api) {
                 intervalId = setInterval(() => {
                     api.scrollNext();
                 }, 5000)
@@ -181,7 +183,7 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
             if (intervalId) {
                 clearInterval(intervalId);
             }
-            if(api) {
+            if (api) {
                 api.off('pointerDown', clearAutoScroll);
                 api.off('pointerUp', setupAutoScroll)
             }
@@ -229,8 +231,15 @@ function TVSeasonOverviewContainer(props: TVSeasonContainerPropsType) {
     const lastEpisode = season?.episodes?.at(-1);
     const statusText = getStatusText(season, currentDate, lastEpisode)
 
+    const title = ((tvShow.name && seasonNumber && seasonName) && `${tvShow.name} | Season (${seasonNumber}) ${seasonName} | Overview ` || "Loading ....") + ' - YATW'
+
     return (
         <BackgroundPageImages backdropPath={selectedEpisode.still_path || ''}>
+            <Helmet>
+
+                <title>{title}</title>
+            </Helmet>
+
             {
                 !isMobileView && (
                     <TvEpisodeSideNav

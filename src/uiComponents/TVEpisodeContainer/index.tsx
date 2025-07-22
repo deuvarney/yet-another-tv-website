@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 
 import { Link } from 'react-router-dom';
 
@@ -187,8 +188,14 @@ function TVSeasonContainer(props: TVSeasonContainerPropsType) {
         showId
     });
 
+    const title = (tvShow?.name && Number.isInteger(seasonNumber) && Number.isInteger(selectedEpisode.episode_number) && selectedEpisode.name) &&
+        `${tvShow.name} | Season ${seasonNumber} | (${selectedEpisode.episode_number}) ${selectedEpisode.name}` || 'Loading...' + " - YATW"
+
     return (
         <BackgroundPageImages backdropPath={selectedEpisode.still_path || ''}>
+            <Helmet>
+                <title>{title}</title>
+            </Helmet>
             {
                 !isMobileView && (
                     <TvEpisodeSideNav
